@@ -60,10 +60,15 @@ export default {
   methods: {
     login () {
       console.log(this.loginForm)
-      // const phone = this.loginForm.phone
-      // const password = this.loginForm.password
-      this.$axios.post('/login/cellphone', JSON.stringify(this.loginForm)).then(res => {
+      const phone = this.loginForm.phone
+      const password = this.loginForm.password
+      this.$axios.get(`/login/cellphone?phone=${phone}&password=${password}`).then(res => {
         console.log(res)
+        if (res.code === 200) {
+          localStorage.setItem('NetEaseCookie', res.cookie)
+          localStorage.setItem('uid', res.account.id)
+          this.$router.push('/')
+        }
       })
     }
   },

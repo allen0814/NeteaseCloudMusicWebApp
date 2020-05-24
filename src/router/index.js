@@ -7,7 +7,20 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('@/views/Home.vue')
+    redirect: '/discover',
+    component: () => import('@/views/Home.vue'),
+    children: [
+      {
+        path: '/mine',
+        name: 'mine',
+        component: () => import('@components/mine/mine.vue')
+      },
+      {
+        path: '/discover',
+        name: 'discover',
+        component: () => import('@components/discover/discover.vue')
+      }
+    ]
   },
   {
     path: '/login',
