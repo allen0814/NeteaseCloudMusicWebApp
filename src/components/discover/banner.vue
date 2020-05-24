@@ -49,9 +49,7 @@ export default {
 
   },
   mounted () {
-    this.$nextTick(() => {
-      sessionStorage.banner ? this.banners = JSON.parse(sessionStorage.banner) : this.getBanner()
-    })
+    sessionStorage.banner ? this.banners = JSON.parse(sessionStorage.banner) : this.getBanner()
     this.swiper.slideTo(1, 2000, false)
   },
   watch: {

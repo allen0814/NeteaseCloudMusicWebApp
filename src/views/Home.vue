@@ -1,12 +1,14 @@
 <template>
 <div class="home-container">
   <div class="home">
-    <ul class="navBar" @click="navClick($event)" ref="navBar">
-      <li><a href="javascript:;" @click="showSideBar"><i class="fa fa-bars"></i></a></li>
-      <li><router-link :to="{name: 'mine'}">我的</router-link></li>
-      <li class="active"><router-link :to="{name: 'discover'}">发现</router-link></li>
-      <li><router-link :to="{name: 'home'}"><i class="fa fa-search"></i></router-link></li>
-    </ul>
+    <div class="top">
+      <div><span @click="showSideBar"><i class="fa fa-bars"></i></span></div>
+      <ul class="navBar" @click="navClick($event)" ref="navBar">
+        <li><router-link :to="{name: 'mine'}">我的</router-link></li>
+        <li class="active"><router-link :to="{name: 'discover'}">发现</router-link></li>
+      </ul>
+      <div><router-link :to="{name: 'search'}"><i class="fa fa-search"></i></router-link></div>
+    </div>
     <router-view/>
   </div>
 
@@ -30,12 +32,12 @@ export default {
       this.$refs.bar.showSideBar()
     },
     navClick (e) {
-      console.log(this.$refs.navBar.children)
-      this.$refs.navBar.children.forEach((item, i) => {
-        item.addEventListener('click', () => {
-          item.classList.add('active')
-        })
-      })
+      const evn = e || window.event
+      const target = evn.target
+      console.log(target)
+      if (target.nodeName === 'A') {
+        target.parentNode.classList.add('active')
+      }
     }
   },
   mounted () {
@@ -58,11 +60,17 @@ export default {
   padding: 5% 5% 0 5%;
   box-sizing: border-box;
 }
-.navBar{
+.top{
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+}
+.navBar{
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   li.active a{
     color: rgb(51, 49, 49);
