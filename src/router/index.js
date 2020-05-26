@@ -33,9 +33,19 @@ const routes = [
     component: () => import('@/Register.vue')
   },
   {
-    path: '/search',
+    path: '/search', // 搜索
     name: 'search',
     component: () => import('@components/search/search.vue')
+  },
+  {
+    path: '/discover/rankinglist', // 发现 - 排行榜
+    name: 'rankinglist',
+    component: () => import('@components/discover/rankinglist.vue')
+  },
+  {
+    path: '/discover/rankinglist/details', // 发现 - 排行榜 - 详情
+    name: 'rankinglist_details',
+    component: () => import('@components/discover/rankinglist_details.vue')
   }
 ]
 

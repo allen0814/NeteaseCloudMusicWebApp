@@ -75,7 +75,7 @@ export default {
 .swiper-container,
 .swiper-img{
   width: 100%;
-  height: 150px;
+  height: 130px;
 }
 </style>
 
