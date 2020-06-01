@@ -33,6 +33,8 @@ export function tryHideFullScreenLoading () {
 
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? '//www.xzw999.com:9527' : '//localhost:3000'
 
+axios.defaults.withCredentials = true
+
 axios.defaults.timeout = 5000
 
 axios.interceptors.request.use(config => {

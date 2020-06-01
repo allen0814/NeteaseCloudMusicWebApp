@@ -46,6 +46,11 @@ const routes = [
     path: '/discover/rankinglist/details', // 发现 - 排行榜 - 详情
     name: 'rankinglist_details',
     component: () => import('@components/discover/rankinglist_details.vue')
+  },
+  {
+    path: '/discover/recommend', // 发现 - 每日推荐
+    name: 'recommend',
+    component: () => import('@components/recommend/recommend.vue')
   }
 ]
 

@@ -3,7 +3,7 @@
     <banner/>
 
     <div class="groups">
-      <a href="#/recommend"><div class="circle"><i class="fa fa-calendar"></i></div><p>每日推荐</p></a>
+      <a href="#/discover/recommend"><div class="circle"><i class="fa fa-calendar"></i></div><p>每日推荐</p></a>
       <a href="#/recommend"><div class="circle"><i class="fa fa-music"></i></div><p>歌单</p></a>
       <a href="#/discover/rankinglist"><div class="circle"><i class="fa fa-bar-chart"></i></div><p>排行榜</p></a>
       <a href="#/recommend"><div class="circle"><i class="fa fa-headphones"></i></div><p>电台</p></a>
