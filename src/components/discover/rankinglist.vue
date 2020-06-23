@@ -9,11 +9,11 @@
     <div class="official">
       <div class="list-single" v-for="(item) in officiallist" :key="item.playCount" :data-name='item.name' @click.stop="toDetails($event)" ref="single">
         <div class="list-single-left">
-          <img :src="item.coverImgUrl" :alt="item.name" :data-name='item.name'>
+          <img :src="item.coverImgUrl" :alt="item.name">
           <span :data-name='item.name'>{{item.updateFrequency}}</span>
         </div>
         <div class="list-single-right">
-          <div v-for="(track, index) in item.tracks" :key="index" :data-name='item.name'>{{index+1}}. {{track.first}} - {{track.second}}</div>
+          <div v-for="(track, index) in item.tracks" :key="index">{{index+1}}. {{track.first}} - {{track.second}}</div>
         </div>
       </div>
     </div>
@@ -23,8 +23,8 @@
     <div class="other">
       <div class="list-single" v-for="(item) in otherList" :key="item.playCount" :data-name='item.name' @click.stop="toDetails($event)" ref="single">
         <div class="list-single-left">
-          <img :src="item.coverImgUrl" :alt="item.name" :data-name='item.name'>
-          <span :data-name='item.name'>{{item.updateFrequency}}</span>
+          <img :src="item.coverImgUrl" :alt="item.name">
+          <span>{{item.updateFrequency}}</span>
         </div>
       </div>
     </div>
@@ -110,7 +110,7 @@ export default {
   methods: {
     toDetails (e) {
       const evn = e || window.event
-      const target = evn.target
+      const target = evn.currentTarget
       const rankingType = target.getAttribute('data-name')
       Object.keys(this.rankingIndex).forEach(ele => {
         if (rankingType === ele) {
