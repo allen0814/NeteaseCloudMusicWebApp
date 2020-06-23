@@ -59,6 +59,7 @@ export default {
     getBanner () {
       this.$axios.get('/banner?type=1').then(res => {
         if (res.code === 200) {
+          this.banners = res.banners
           sessionStorage.banner = JSON.stringify(res.banners)
         }
       })

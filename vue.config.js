@@ -1,5 +1,5 @@
 
-const path = require('path');
+const path = require('path')
 
 // 拼接路径
 function resolve (dir) {

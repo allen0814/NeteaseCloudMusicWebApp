@@ -1,7 +1,12 @@
 <template>
-  <div class="sideBar-container" ref="sideBar" @click="closeSideBar($event)">
+  <div class="sideBar-container" ref="sideBar" @click="closeSideBar($event)"
+    @touchstart='touchstart'
+    @touchmove='touchmove'>
     <div class="main-container">
       用户信息
+      <div class="login-out">
+        <button @click="loginOut">退出登录</button>
+      </div>
     </div>
   </div>
 </template>
@@ -13,7 +18,10 @@ export default {
   },
   data () {
     return {
-
+      startX: 0,
+      startY: 0,
+      moveX: 0,
+      moveY: 0
     }
   },
   computed: {
@@ -39,6 +47,29 @@ export default {
       if (e.target.className === 'sideBar-container show') {
         this.hideSideBar()
       }
+    },
+    loginOut () {
+      this.$axios.get('/logout').then(res => {
+        if (res.code === 200) {
+          localStorage.removeItem('uid')
+          localStorage.removeItem('NetEaseCookie')
+          this.$message.success('已退出')
+          this.hideSideBar()
+        }
+      })
+    },
+    touchstart (e) {
+      // e.preventDefault()
+      console.log(`start: ${e.touches[0].clientX}, ${e.touches[0].clientY}`)
+      this.startX = e.touches[0].clientX
+      this.startY = e.touches[0].clientY
+    },
+    touchmove (e) {
+      // e.preventDefault()
+      this.moveX = e.touches[0].clientX
+      this.moveY = e.touches[0].clientY
+      this.startX - this.moveX <= 0 ? console.log('你在往右滑') : console.log('你在往左滑')
+      if ((this.startX - this.moveX) >= 100) this.hideSideBar()
     }
   },
   components: {

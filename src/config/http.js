@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message, Loading } from 'element-ui'
+import router from '../router/index'
 
 let loading
 
@@ -39,7 +40,6 @@ axios.defaults.timeout = 5000
 
 axios.interceptors.request.use(config => {
   // add cookie
-
   showFullScreenLoading()
   return config
 }, err => {
@@ -52,7 +52,12 @@ axios.interceptors.response.use(res => {
   tryHideFullScreenLoading()
   return res.data
 }, err => {
-  Message.error(err.message)
+  if (err.response.status) {
+    tryHideFullScreenLoading()
+    Message.error('请先登录')
+    router.push('/login')
+  }
+  // Message.error(err.message)
   return Promise.reject(err)
 })
 

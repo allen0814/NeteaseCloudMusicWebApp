@@ -41,7 +41,6 @@ export default {
     this.$axios.get('/recommend/songs').then(res => {
       if (res.code === 200) {
         this.recommendList = res.recommend
-        console.log(this.recommendList)
       }
     })
   },

@@ -65,9 +65,15 @@ export default {
       this.$axios.get(`/login/cellphone?phone=${phone}&password=${password}`).then(res => {
         console.log(res)
         if (res.code === 200) {
+          const userInfo = {}
+          userInfo.avatarUrl = res.profile.avatarUrl
+          userInfo.backgroundUrl = res.profile.backgroundUrl
+          userInfo.nickname = res.profile.nickname
           localStorage.setItem('NetEaseCookie', res.cookie)
           localStorage.setItem('uid', res.account.id)
+          localStorage.setItem('userInfo', JSON.stringify(userInfo))
           this.$router.push('/')
+          this.$message.success('登录成功')
         }
       })
     }
