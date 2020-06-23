@@ -2,6 +2,11 @@
 <template>
   <div class="rankinglist-detail">
     <goBack :showGoBack='showGoBack'/>
+    <div style="height: 36px"></div>
+    <!-- <div class="describe">
+      <img :src="playlist.coverImgUrl" alt="" width="100%" height="300px">
+      <p class="description">{{playlist.description}}</p>
+    </div> -->
     <div class="songlist">
       <div class="single" v-for='item in tracks' :key="item.id" :data-id='item.id'>
         <div class="info">
@@ -25,9 +30,11 @@ export default {
     return {
       showGoBack: {
         show: 1,
-        path: 'discover/rankinglist'
+        path: 'discover/rankinglist',
+        style: { position: 'fixed', padding: '0 5%' }
       },
-      tracks: []
+      tracks: [],
+      playlist: {} // 当前榜单所有数据
     }
   },
   computed: {
@@ -37,7 +44,27 @@ export default {
     this.getPlayList()
   },
   mounted () {
-
+    const _this = this
+    window.onscroll = function () {
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop > 40) {
+        _this.showGoBack.style = {
+          position: 'fixed',
+          top: 0,
+          color: '#fff',
+          height: '36px',
+          'line-height': '36px',
+          'background-color': '#dd001b',
+          transition: 'all 1s',
+          padding: '0 5%'
+        }
+      } else {
+        _this.showGoBack.style = {
+          position: 'fixed',
+          padding: '0 5%'
+        }
+      }
+    }
   },
   watch: {
 
@@ -48,6 +75,7 @@ export default {
       const selectedIndex = sessionStorage.getItem('rankingListIndex')
       this.$axios.get(`/top/list?idx=${selectedIndex}`).then(res => {
         if (res.code === 200) {
+          this.playlist = res.playlist
           this.tracks = res.playlist.tracks
         }
       })
@@ -61,10 +89,27 @@ export default {
 
 <style scoped lang="scss">
 .rankinglist-detail{
-  padding: 5%;
+  padding: 5% 0 0 0;
   height: 100%;
 }
+.describe{
+  width: 100%;
+  height: 300px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  .description{
+    position: absolute;
+    bottom: 70px;
+    left: 5%;
+    color: #fff;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
 .songlist{
+  padding: 0 5%;
   .single{
     display: flex;
     align-items: center;

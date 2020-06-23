@@ -181,7 +181,6 @@ export default {
     div{
       height: 33%;
       color: #7c7979;
-      font-size: 13px;
       display: flex;
       align-items: center;
       font-size: 12px;
