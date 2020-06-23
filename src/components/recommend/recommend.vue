@@ -80,6 +80,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
+      font-size: 12px;
       .singer{
         color: #a39f9f;
         font-size: 12px;

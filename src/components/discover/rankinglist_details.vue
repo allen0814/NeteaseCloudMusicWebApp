@@ -3,10 +3,11 @@
   <div class="rankinglist-detail">
     <goBack :showGoBack='showGoBack'/>
     <div class="songlist">
-      <div class="single" v-for='item in tracks' :key="item.id">
+      <div class="single" v-for='item in tracks' :key="item.id" :data-id='item.id'>
         <div class="info">
           <div class="name">{{item.name}}</div>
-          <div class="singer"><span v-for="singer in item.ar" :key="singer.id">{{singer.name}}</span> - {{item.al.name}}</div>
+          <div class="singer" v-if="item.ar.length === 1"><span>{{item.ar[0].name}}</span> - {{item.al.name}}</div>
+          <div class="singer" v-else><span v-for="singer in item.ar" :key="singer.id">{{singer.name}} </span> - {{item.al.name}}</div>
         </div>
         <div class="play"><i class="fa fa-play-circle-o"></i></div>
       </div>
@@ -48,7 +49,6 @@ export default {
       this.$axios.get(`/top/list?idx=${selectedIndex}`).then(res => {
         if (res.code === 200) {
           this.tracks = res.playlist.tracks
-          console.log(this.tracks)
         }
       })
     }
@@ -70,25 +70,29 @@ export default {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
-    box-shadow: 10px 10px 10px rgba(0,0,0,.3);
+    box-shadow: 3px 5px 7px rgba(0,0,0,.2);
     padding: 10px;
     box-sizing: border-box;
-    background-color: #BA5370;
+    background-color: #E6E6FA;
     border-radius: 4px;
+    color: rgb(12, 12, 12);
     .info{
-      width: 50%;
-      color: #fff;
+      width: 90%;
       .name{
         font-weight: 600;
+        font-size: 14px;
       }
       .singer{
-        font-size: 12px;
-        margin-top: 5px;
+        font-size: 11px;
+        margin-top: 8px;
+        color: #a39f9f;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
       }
     }
     .play{
       width: 4%;
-      color: #d3d3d3;
     }
   }
 }

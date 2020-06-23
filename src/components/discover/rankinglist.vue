@@ -184,6 +184,7 @@ export default {
       font-size: 13px;
       display: flex;
       align-items: center;
+      font-size: 12px;
     }
   }
 }
