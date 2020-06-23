@@ -1,24 +1,7 @@
-# netease_cloud_music_app
+# 网抑云音乐
 
-## Project setup
-```
-npm install
-```
+## 让我们抑起来!
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## 感谢API提供者[binaryify](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 正在开发中... 后续会放到服务器上!
