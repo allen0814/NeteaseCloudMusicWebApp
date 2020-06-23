@@ -17,7 +17,7 @@ html body{
 }
 input[type='text']{
   width: 80%;
-  padding: 5px 5px;
+  padding: 5px 0 3px 5px;
   outline: none;
   border: none;
   border-bottom: 1px solid #ccc;

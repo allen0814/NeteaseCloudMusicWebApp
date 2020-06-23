@@ -2,24 +2,17 @@
   <div class="search-container">
     <goBack :showGoBack='showGoBack'/>
     <div class="search-panel">
-      <input type="text" v-model="text">
-      <span><i class="fa fa-search"></i></span>
+      <input type="text" v-model="text"  :placeholder="showKeyword" @keyup.enter="search">
+      <span @click="search"><i class="fa fa-search"></i></span>
     </div>
     <!-- 搜索历史记录 -->
     <div class="history">
       <div class="history-top">
         <div>历史记录</div>
-        <div><i class="fa fa-trash-o"></i></div>
+        <div @click="clearHistory"><i class="fa fa-trash-o"></i></div>
       </div>
       <div class="history-bottom">
-        <span class="tag">higher</span>
-        <span class="tag">higher21323332323</span>
-        <span class="tag">higher</span>
-        <span class="tag">higher</span>
-        <span class="tag">higher</span>
-        <span class="tag">higher</span>
-        <span class="tag">higher</span>
-        <span class="tag">higher</span>
+        <span class="tag" v-for="(item, i) in searchHistory" :key="i">{{item}}</span>
       </div>
     </div>
     <!-- 热搜榜 -->
@@ -31,7 +24,7 @@
       @click="quickSearch($event)">
         <div class="order" :style="{ color: (i + 1) <= 3 ? 'red' : '#a39f9f'}">{{i + 1}}</div>
         <div class="content">
-          <div class="name">{{item.searchWord}} <span><img :src="item.iconUrl" alt="" width="26px"></span></div>
+          <div class="name">{{item.searchWord}} <span><img :src="item.iconUrl" width="26px"></span></div>
           <div class="des">{{item.content}}</div>
         </div>
         <div class="score">{{item.score}}</div>
@@ -52,7 +45,10 @@ export default {
         path: 'discover',
         show: 0
       },
+      searchHistory: [], // 搜索历史记录
       text: '',
+      showKeyword: '', // 输入框默认显示内容
+      realkeyword: '', // 实际搜索的内容
       hotList: []
     }
   },
@@ -61,6 +57,8 @@ export default {
   },
   created () {
     sessionStorage.searchHotList ? this.hotList = JSON.parse(sessionStorage.searchHotList) : this.getHotList()
+    this.getSearchDefault()
+    localStorage.searchHistory ? this.searchHistory = JSON.parse(localStorage.searchHistory) : this.searchHistory = []
   },
   mounted () {
 
@@ -75,10 +73,32 @@ export default {
         sessionStorage.setItem('searchHotList', JSON.stringify(this.hotList))
       })
     },
+    getSearchDefault () {
+      this.$axios.get('/search/default').then(res => {
+        if (res.code === 200) {
+          this.showKeyword = res.data.showKeyword
+          this.realkeyword = res.data.realkeyword
+        }
+      })
+    },
     quickSearch (event) { // 热搜榜点击可以快捷搜索
       const e = event || window.event
       const target = e.currentTarget
       console.log(target.getAttribute('data-searchWord'))
+    },
+    search () {
+      if (this.text === '') {
+        this.text = this.realkeyword
+      }
+      // 调用搜索接口
+      this.searchHistory.push(this.text)
+      this.searchHistory = Array.from(new Set(this.searchHistory))
+      localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory))
+    },
+    clearHistory () {
+      localStorage.removeItem('searchHistory')
+      document.querySelector('.history-bottom').innerHTML = ''
+      this.text = ''
     }
   },
   components: {
@@ -140,6 +160,9 @@ export default {
     }
     .name{
       font-weight: 700;
+      img{
+        max-height: 14px;
+      }
     }
     .des{
       margin-top: 10px;
