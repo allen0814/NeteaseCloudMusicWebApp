@@ -2,8 +2,11 @@
   <div class="search-container">
     <goBack :showGoBack='showGoBack'/>
     <div class="search-panel">
-      <input type="text" v-model="text"  :placeholder="showKeyword" @keyup.enter="search">
+      <input type="text" v-model="text" :placeholder="showKeyword" @keyup.enter="search">
       <span @click="search"><i class="fa fa-search"></i></span>
+    </div>
+    <div class="suggest" :style="{border: suggest.length === 0 ? 'none' : '1px solid #ccc'}">
+      <div class="suggest-single" v-for="(item, i) in suggest" :key="i">{{item.keyword}}</div>
     </div>
     <!-- 搜索历史记录 -->
     <div class="history">
@@ -49,7 +52,8 @@ export default {
       text: '',
       showKeyword: '', // 输入框默认显示内容
       realkeyword: '', // 实际搜索的内容
-      hotList: []
+      hotList: [],
+      suggest: [] // 输入提示建议
     }
   },
   computed: {
@@ -64,7 +68,20 @@ export default {
 
   },
   watch: {
-
+    text: {
+      handler (newVal) {
+        if (newVal === '') {
+          this.suggest = []
+          return
+        }
+        this.$axios.get(`/search/suggest?keywords=${newVal}&type=mobile`).then(res => {
+          if (res.code === 200) {
+            console.log(res.result.allMatch)
+            this.suggest = res.result.allMatch
+          }
+        })
+      }
+    }
   },
   methods: {
     getHotList () {
@@ -172,6 +189,28 @@ export default {
     .score{
       color: #a39f9f;
     }
+  }
+}
+input[type='text']{
+  width: 80%;
+  padding: 5px 0 3px 5px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+input[type='text']:focus{
+  border-bottom: 1px solid #dd001b;
+}
+.suggest{
+  width: 75%;
+  z-index: 10;
+  position: fixed;
+  // left: 40px;
+  box-shadow: 3px 5px 7px rgba(0, 0, 0, .2);
+  &-single{
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0;
+    background-color: #fff;
   }
 }
 </style>

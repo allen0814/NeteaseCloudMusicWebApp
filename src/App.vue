@@ -15,14 +15,4 @@ html body{
   width: 100%;
   height: 100%;
 }
-input[type='text']{
-  width: 80%;
-  padding: 5px 0 3px 5px;
-  outline: none;
-  border: none;
-  border-bottom: 1px solid #ccc;
-}
-input[type='text']:focus{
-  border-bottom: 1px solid $color-primary;
-}
 </style>
