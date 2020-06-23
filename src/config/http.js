@@ -52,11 +52,12 @@ axios.interceptors.response.use(res => {
   tryHideFullScreenLoading()
   return res.data
 }, err => {
-  if (err.response.status) {
+  if (err.response.status === 301) {
     tryHideFullScreenLoading()
     Message.error('请先登录')
     router.push('/login')
   }
+  tryHideFullScreenLoading()
   // Message.error(err.message)
   return Promise.reject(err)
 })
