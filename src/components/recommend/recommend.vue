@@ -3,7 +3,7 @@
   <div class="recommend">
     <goBack :showGoBack='showGoBack'/>
     <div class="recommend-list">
-      <div class="recommend-list-single" v-for="item in recommendList" :key="item.id">
+      <div class="recommend-list-single" v-for="item in recommendList" :key="item.id" :data-songId='item.privilege.id' @click="play($event)">
         <div class="img">
           <img :src="item.album.blurPicUrl" alt="" width="50" height="50">
         </div>
@@ -51,7 +51,11 @@ export default {
 
   },
   methods: {
-
+    play (event) {
+      const e = event || window.event
+      const target = e.currentTarget
+      console.log(target.getAttribute('data-songId'))
+    }
   },
   components: {
     goBack
