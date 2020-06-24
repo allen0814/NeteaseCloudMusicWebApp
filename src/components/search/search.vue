@@ -3,10 +3,11 @@
     <goBack :showGoBack='showGoBack'/>
     <div class="search-panel">
       <input type="text" v-model="text" :placeholder="showKeyword" @keyup.enter="search">
-      <span @click="search"><i class="fa fa-search"></i></span>
+      <span v-show="text !== '' " @click="clearInput"><i class="fa fa-close"></i></span>
+      <span @click="regularSearch"><i class="fa fa-search"></i></span>
     </div>
-    <div class="suggest" :style="{border: suggest.length === 0 ? 'none' : '1px solid #ccc'}">
-      <div class="suggest-single" v-for="(item, i) in suggest" :key="i">{{item.keyword}}</div>
+    <div class="suggest" :style="{border: suggest.length === 0 ? 'none' : '1px solid #ccc'}" @click="suggestSearch($event)">
+      <div class="suggest-single" :data-suggestName='item.keyword' v-for="(item, i) in suggest" :key="i">{{item.keyword}}</div>
     </div>
     <!-- 搜索历史记录 -->
     <div class="history">
@@ -25,9 +26,9 @@
       v-for="(item, i) in hotList" :key="item.score"
       :data-searchWord='item.searchWord'
       @click="quickSearch($event)">
-        <div class="order" :style="{ color: (i + 1) <= 3 ? 'red' : '#a39f9f'}">{{i + 1}}</div>
+        <div class="order" :style="{color: i <= 2 ? 'red' : '#a39f9f'}">{{i + 1}}</div>
         <div class="content">
-          <div class="name">{{item.searchWord}} <span><img :src="item.iconUrl" width="26px"></span></div>
+          <div :class="{name: i <= 2 }">{{item.searchWord}} <span><img :src="item.iconUrl" width="26px"></span></div>
           <div class="des">{{item.content}}</div>
         </div>
         <div class="score">{{item.score}}</div>
@@ -70,6 +71,7 @@ export default {
   watch: {
     text: {
       handler (newVal) {
+        console.log(newVal)
         if (newVal === '') {
           this.suggest = []
           return
@@ -101,9 +103,11 @@ export default {
     quickSearch (event) { // 热搜榜点击可以快捷搜索
       const e = event || window.event
       const target = e.currentTarget
-      console.log(target.getAttribute('data-searchWord'))
+      const keywords = target.getAttribute('data-searchWord')
+      sessionStorage.setItem('searchKeyword', keywords)
+      this.search(keywords)
     },
-    search () {
+    regularSearch () { // 点击搜索图标的搜索
       if (this.text === '') {
         this.text = this.realkeyword
       }
@@ -112,10 +116,30 @@ export default {
       this.searchHistory = Array.from(new Set(this.searchHistory))
       localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory))
     },
+    suggestSearch (event) { // 搜索建议 点击的快捷搜索
+      const e = event || window.event
+      e.stopPropagation()
+      const target = e.target
+      console.log(target.getAttribute('data-suggestname'))
+    },
     clearHistory () {
       localStorage.removeItem('searchHistory')
       document.querySelector('.history-bottom').innerHTML = ''
       this.text = ''
+    },
+    clearInput () {
+      this.text = ''
+      document.querySelector('.history-bottom').innerHTML = ''
+    },
+    async search (keywords, limit = 20, type = 1) { // 搜索公用方法
+      const res = await this.$axios.get(`/search?keywords=${keywords}&limit=${limit}&type=${type}`)
+      if (res.code === 200) {
+        // 将搜索结果存到sessionStorage里面
+        sessionStorage.setItem('searchResult', JSON.stringify(res.result.songs))
+        // 将所有结果存到vuex里面
+        this.$store.dispatch('setSearchResult', res.result)
+        this.$router.push({ name: 'result' })
+      }
     }
   },
   components: {
@@ -202,14 +226,13 @@ input[type='text']:focus{
   border-bottom: 1px solid #dd001b;
 }
 .suggest{
-  width: 75%;
+  width: 90%;
   z-index: 10;
   position: fixed;
   // left: 40px;
   box-shadow: 3px 5px 7px rgba(0, 0, 0, .2);
   &-single{
-    border-bottom: 1px solid #ccc;
-    padding: 5px 0;
+    padding: 5px 0 5px 5px;
     background-color: #fff;
   }
 }

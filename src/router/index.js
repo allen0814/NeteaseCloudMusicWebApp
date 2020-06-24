@@ -43,14 +43,12 @@ const routes = [
   {
     path: '/search', // 搜索
     name: 'search',
-    component: () => import('@components/search/search.vue'),
-    children: [
-      {
-        path: '/search/result',
-        name: 'result',
-        component: () => import('@/components/search/searchResult.vue')
-      }
-    ]
+    component: () => import('@components/search/search.vue')
+  },
+  {
+    path: '/search/result', // 搜索 - 结果
+    name: 'result',
+    component: () => import('@/components/search/searchResult.vue')
   },
   {
     path: '/discover/rankinglist', // 发现 - 排行榜

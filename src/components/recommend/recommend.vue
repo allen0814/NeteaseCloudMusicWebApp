@@ -63,35 +63,4 @@ export default {
 .recommend{
   padding: 5%;
 }
-.recommend-list{
-  height: 80vh;
-  &-single{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    .img{
-      width: 50px;
-      height: 50px;
-    }
-    .song-detail{
-      width: 70%;
-      height: 50px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      font-size: 12px;
-      .singer{
-        color: #a39f9f;
-        font-size: 12px;
-      }
-    }
-    .play{
-      color: #a39f9f;
-      i{
-        font-size: 16px;
-      }
-    }
-  }
-}
 </style>
