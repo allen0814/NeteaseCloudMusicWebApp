@@ -8,7 +8,7 @@
       <p class="description">{{playlist.description}}</p>
     </div> -->
     <div class="songlist">
-      <div class="single" v-for='item in tracks' :key="item.id" :data-id='item.id'>
+      <div class="single" v-for='item in tracks' :key="item.id" :data-songId='item.id'>
         <div class="info">
           <div class="name">{{item.name}}</div>
           <div class="singer" v-if="item.ar.length === 1"><span>{{item.ar[0].name}}</span> - {{item.al.name}}</div>
