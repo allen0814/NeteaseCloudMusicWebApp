@@ -15,8 +15,8 @@
         <div>历史记录</div>
         <div @click="clearHistory"><i class="fa fa-trash-o"></i></div>
       </div>
-      <div class="history-bottom">
-        <span class="tag" v-for="(item, i) in searchHistory" :key="i">{{item}}</span>
+      <div class="history-bottom" @click="historySearch($event)">
+        <span class="tag" v-for="(item, i) in searchHistory" :key="i" :data-historyName='item'>{{item}}</span>
       </div>
     </div>
     <!-- 热搜榜 -->
@@ -104,7 +104,6 @@ export default {
       const e = event || window.event
       const target = e.currentTarget
       const keywords = target.getAttribute('data-searchWord')
-      sessionStorage.setItem('searchKeyword', keywords)
       this.search(keywords)
     },
     regularSearch () { // 点击搜索图标的搜索
@@ -120,7 +119,15 @@ export default {
       const e = event || window.event
       e.stopPropagation()
       const target = e.target
-      console.log(target.getAttribute('data-suggestname'))
+      const keywords = target.getAttribute('data-suggestname')
+      this.search(keywords)
+    },
+    historySearch (event) { // 历史记录 点击的快捷搜索
+      const e = event || window.event
+      e.stopPropagation()
+      const target = e.target
+      const keywords = target.getAttribute('data-historyName')
+      this.search(keywords)
     },
     clearHistory () {
       localStorage.removeItem('searchHistory')
@@ -132,6 +139,7 @@ export default {
       document.querySelector('.history-bottom').innerHTML = ''
     },
     async search (keywords, limit = 20, type = 1) { // 搜索公用方法
+      sessionStorage.setItem('searchKeyword', keywords)
       const res = await this.$axios.get(`/search?keywords=${keywords}&limit=${limit}&type=${type}`)
       if (res.code === 200) {
         // 将搜索结果存到sessionStorage里面
