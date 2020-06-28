@@ -110,10 +110,14 @@ export default {
       if (this.text === '') {
         this.text = this.realkeyword
       }
-      // 调用搜索接口
+
+      // 将搜索记录存到localStorage里面
       this.searchHistory.push(this.text)
       this.searchHistory = Array.from(new Set(this.searchHistory))
       localStorage.setItem('searchHistory', JSON.stringify(this.searchHistory))
+
+      // 调用搜索接口
+      this.search(this.text)
     },
     suggestSearch (event) { // 搜索建议 点击的快捷搜索
       const e = event || window.event
