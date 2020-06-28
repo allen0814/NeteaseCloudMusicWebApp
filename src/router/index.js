@@ -64,6 +64,11 @@ const routes = [
     path: '/discover/recommend', // 发现 - 每日推荐
     name: 'recommend',
     component: () => import('@components/recommend/recommend.vue')
+  },
+  {
+    path: '/play', // 发现 - 每日推荐
+    name: 'play',
+    component: () => import('@components/play/play.vue')
   }
 ]
 

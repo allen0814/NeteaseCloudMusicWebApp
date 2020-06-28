@@ -8,8 +8,9 @@
       <p class="description">{{playlist.description}}</p>
     </div> -->
     <div class="songlist">
-      <div class="single" v-for='item in tracks' :key="item.id" :data-songId='item.id'>
-        <img :src="item.al.picUrl" alt="" width="40px" height="40px">
+      <div class="single" v-for='(item, i) in tracks' :key="item.id" :data-songId='item.id'>
+        <!-- <img :src="item.al.picUrl" alt="" width="40px" height="40px"> -->
+        <div :style="{color: i <= 2 ? 'red' : '#a39f9f'}">{{i + 1}}</div>
         <div class="info">
           <div class="name">{{item.name}}</div>
           <div class="singer" v-if="item.ar.length === 1"><span>{{item.ar[0].name}}</span> - {{item.al.name}}</div>
@@ -123,7 +124,7 @@ export default {
     border-radius: 4px;
     color: rgb(12, 12, 12);
     .info{
-      width: 70%;
+      width: 80%;
       .name{
         font-weight: 600;
         font-size: 14px;
