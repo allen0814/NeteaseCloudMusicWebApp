@@ -113,16 +113,19 @@ export default {
     },
     ended () {
       this.$refs.cd.classList.remove('rotate')
+      this.$refs.audio.currentTime = 0
+      this.isPlaying = false
       console.log('播放完毕')
     },
     updateProgress (currentTime, duration) { // 更新进度条
-      const precent = `${((currentTime / duration) * 100).toFixed(0)}%`
+      const precent = `${((currentTime / duration) * 100).toFixed(5)}%`
       this.precent = precent
     },
     clickProgress (event) { // 点击进度条时 更新音频时间和进度条
       const e = event || window.event
       const position = e.clientX - e.currentTarget.offsetLeft// 当前点击的位置
       const progressWidth = this.$refs.progress.offsetWidth
+      this.$refs.audio.currentTime = ((position / progressWidth) * this.duration)
       this.updateProgress(((position / progressWidth) * this.duration), this.duration)
     }
   },
