@@ -5,13 +5,13 @@
   </div>
   <div class="play-container">
     <goBack :showGoBack='showGoBack'/>
-    <div class="cd" v-show="show" @click="show = !show">
+    <div class="cd" v-show="show" @click="show = !show" ref="cd">
       <img :src="playingSong.blurPicUrl" width="60%">
     </div>
     <div class="lyrics" v-show="!show" @click="show = !show">
        <div class="volume">
          <i class="fa fa-volume-up"></i>
-         <div class="volumeRange"><input type="range" min="0" max="100" value="100" step="5"></div>
+         <div class="volumeRange"><input type="range" min="0" max="100" value="100" step="1"></div>
          </div>
     </div>
 
@@ -23,12 +23,12 @@
         <div class="comment"><i class="fa fa-commenting-o"></i></div>
       </div>
       <div class="bottom-progress">
-        <div class="curTime">03:33</div>
-        <div class="progress">
-          <div class="line"></div>
-          <div class="dot"></div>
+        <div class="curTime">{{curTime}}</div>
+        <div class="progress" @click="clickProgress($event)" ref="progress">
+          <div class="line" :style="{width: `${precent}`}"></div>
+          <div class="dot" :style="{left: `${precent}`}"></div>
         </div>
-        <div class="allTime">04:14</div>
+        <div class="allTime">{{allTime}}</div>
       </div>
       <div class="bottom-controls">
         <div class="prev"><i class="fa fa-step-backward"></i></div>
@@ -39,7 +39,7 @@
     </div>
 
     <!-- autio标签 -->
-    <audio :src="musicUrl"></audio>
+    <audio @timeupdate="updateTime" @canplay="getDuration" @ended="ended" :src="musicUrl" id="audio" ref="audio"></audio>
   </div>
 </div>
 </template>
@@ -61,7 +61,12 @@ export default {
       playingSong: {}, // 正在播放的歌曲信息
       show: true, // 控制cd和lyrics的显示 默认显示cd
       isPlaying: false, // 播放和暂停状态
-      musicUrl: ''
+      musicUrl: '', // 音乐地址
+      curTime: '00:00', // 当前播放时间，格式化之后的
+      allTime: '00:00', // 当前音频总时长，格式化之后的
+      duration: 0, // 音频总时长，单位秒
+      currentTime: 0, // 音频当前播放时间， 单位秒
+      precent: '0%' // 当前播放进度百分比
     }
   },
   computed: {
@@ -70,6 +75,7 @@ export default {
   created () {
     this.playingSong = JSON.parse(localStorage.playingSong)
     this.showGoBack.title = `${this.playingSong.name} - ${this.playingSong.singer}`
+    this.musicUrl = this.playingSong.url
   },
   mounted () {
 
@@ -78,12 +84,46 @@ export default {
 
   },
   methods: {
-    playSong () {
-      this.musicUrl = this.playingSong.url
+    playSong () { // 播放歌曲
+      const audio = this.$refs.audio
       this.isPlaying = !this.isPlaying
+      audio.play()
+      this.$refs.cd.classList.add('rotate')
+      if (this.$refs.cd.classList.contains('rotatePause')) this.$refs.cd.classList.remove('rotatePause')
     },
-    pauseSong () {
+    pauseSong () { // 暂停歌曲
       this.isPlaying = !this.isPlaying
+      this.$refs.audio.pause()
+      this.$refs.cd.classList.add('rotatePause')
+    },
+    getDuration () { // canplay时获取音频总时长
+      this.duration = this.$refs.audio.duration
+      this.allTime = this.formatTime(this.$refs.audio.duration)
+    },
+    updateTime (e) { // timeupdate时获取当前播放时间
+      const { currentTime } = e.target
+      this.currentTime = currentTime
+      this.curTime = this.formatTime(currentTime)
+      this.updateProgress(currentTime, this.duration)
+    },
+    formatTime (time) {
+      const mins = Math.floor(time / 60) < 10 ? `0${Math.floor(time / 60)}` : Math.floor(time / 60)
+      const sec = Math.floor(time % 60) < 10 ? `0${Math.floor(time % 60)}` : Math.floor(time % 60)
+      return `${mins}:${sec}`
+    },
+    ended () {
+      this.$refs.cd.classList.remove('rotate')
+      console.log('播放完毕')
+    },
+    updateProgress (currentTime, duration) { // 更新进度条
+      const precent = `${((currentTime / duration) * 100).toFixed(0)}%`
+      this.precent = precent
+    },
+    clickProgress (event) { // 点击进度条时 更新音频时间和进度条
+      const e = event || window.event
+      const position = e.clientX - e.currentTarget.offsetLeft// 当前点击的位置
+      const progressWidth = this.$refs.progress.offsetWidth
+      this.updateProgress(((position / progressWidth) * this.duration), this.duration)
     }
   },
   components: {
@@ -123,6 +163,13 @@ export default {
   img{
     border-radius: 50%;
   }
+}
+.cd.rotate img{
+  animation: rotateIMG 5s linear infinite;
+}
+.cd.rotatePause img{
+ animation-play-state:paused;
+  -webkit-animation-play-state:paused; /* Safari 和 Chrome */
 }
 .lyrics{
   height: 60%;
@@ -166,16 +213,16 @@ export default {
         top: 0;
         height: 2px;
         background-color: skyblue;
-        width: 30%;
+        transition: width .1s;
       }
       .dot{
         width: 14px;
         height: 14px;
         border-radius: 50%;
         position: absolute;
-        left: -6px;
         top: -6px;
         background-color: #ccc;
+        transition: left .1s;
       }
     }
   }
