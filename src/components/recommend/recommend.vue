@@ -75,6 +75,7 @@ export default {
             playingSongInfo.id = this.recommendList[index].id
             playingSongInfo.blurPicUrl = this.recommendList[index].al.picUrl
             playingSongInfo.name = this.recommendList[index].name
+            playingSongInfo.url = res.data[0].url
 
             localStorage.setItem('playingSong', JSON.stringify(playingSongInfo))
           }

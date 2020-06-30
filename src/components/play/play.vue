@@ -8,7 +8,12 @@
     <div class="cd" v-show="show" @click="show = !show">
       <img :src="playingSong.blurPicUrl" width="60%">
     </div>
-    <div class="lyrics" v-show="!show" @click="show = !show"></div>
+    <div class="lyrics" v-show="!show" @click="show = !show">
+       <div class="volume">
+         <i class="fa fa-volume-up"></i>
+         <div class="volumeRange"><input type="range" min="0" max="100" value="100" step="5"></div>
+         </div>
+    </div>
 
     <!-- 下方控件 -->
     <div class="bottom">
@@ -19,11 +24,22 @@
       </div>
       <div class="bottom-progress">
         <div class="curTime">03:33</div>
-        <div class="progress"></div>
+        <div class="progress">
+          <div class="line"></div>
+          <div class="dot"></div>
+        </div>
         <div class="allTime">04:14</div>
       </div>
-      <div class="bottom-controls"></div>
+      <div class="bottom-controls">
+        <div class="prev"><i class="fa fa-step-backward"></i></div>
+        <div class="pause" v-show="isPlaying" @click="pauseSong"><i class="fa fa-pause"></i></div>
+        <div class="play" v-show="!isPlaying" @click="playSong"><i class="fa fa-play"></i></div>
+        <div class="next"><i class="fa fa-step-forward"></i></div>
+      </div>
     </div>
+
+    <!-- autio标签 -->
+    <audio :src="musicUrl"></audio>
   </div>
 </div>
 </template>
@@ -43,7 +59,9 @@ export default {
         style: { padding: '5% 0 0 5%', color: '#fff' }
       },
       playingSong: {}, // 正在播放的歌曲信息
-      show: true // 控制cd和lyrics的显示 默认显示cd
+      show: true, // 控制cd和lyrics的显示 默认显示cd
+      isPlaying: false, // 播放和暂停状态
+      musicUrl: ''
     }
   },
   computed: {
@@ -60,7 +78,13 @@ export default {
 
   },
   methods: {
-
+    playSong () {
+      this.musicUrl = this.playingSong.url
+      this.isPlaying = !this.isPlaying
+    },
+    pauseSong () {
+      this.isPlaying = !this.isPlaying
+    }
   },
   components: {
     goBack
@@ -96,18 +120,28 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #000;
   img{
     border-radius: 50%;
   }
 }
 .lyrics{
   height: 60%;
-  background-color: blue;
+  // background-color: skyblue;
+  .volume{
+    color: #fff;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    i{
+      margin-right: 20px;
+    }
+    .volumeRange{
+      width: 100%;
+    }
+  }
 }
 .bottom{
   height: 30%;
-  border-top: 1px solid #000;
   color: #fff;
   &-line1{
     font-size: 30px;
@@ -122,10 +156,35 @@ export default {
     align-items: center;
     justify-content: space-between;
     .progress{
-      height: 1px;
+      height: 2px;
       background-color: #fff;
       width: 70%;
+      position: relative;
+      .line{
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 2px;
+        background-color: skyblue;
+        width: 30%;
+      }
+      .dot{
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        position: absolute;
+        left: -6px;
+        top: -6px;
+        background-color: #ccc;
+      }
     }
+  }
+  &-controls{
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 30px;
   }
 }
 </style>
