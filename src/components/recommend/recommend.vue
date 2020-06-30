@@ -77,12 +77,29 @@ export default {
             playingSongInfo.name = this.recommendList[index].name
             playingSongInfo.url = res.data[0].url
 
+            if (res.data[0].url === null) {
+              this.$message.error('无法获取当前歌曲的地址,页面将在3s后跳转！')
+              setTimeout(() => {
+                this.$router.push('/discover/recommend')
+              }, 3000)
+            }
+
             localStorage.setItem('playingSong', JSON.stringify(playingSongInfo))
           }
         })
       } else {
         this.$message.error(`${useable.message}`)
       }
+
+      // 请求歌词
+      this.$axios.get(`/lyric?id=${id}`).then(res => {
+        if (res.code === 200) {
+          const lyrics = {}
+          lyrics.lyric = res.lrc.lyric
+          lyrics.tlyric = res.tlyric.lyric
+          localStorage.setItem('lyrics', JSON.stringify(lyrics))
+        }
+      })
     }
   },
   components: {
