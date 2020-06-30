@@ -26,7 +26,7 @@
         <div class="curTime">{{curTime}}</div>
         <div class="progress" @click="clickProgress($event)" ref="progress">
           <div class="line" :style="{width: `${precent}`}"></div>
-          <div class="dot" :style="{left: `${precent}`}"></div>
+          <div class="dot" :style="{left: `${precent}`}" @touchstart='dotStart' @touchmove='dotMove' @touchend='dotEnd'></div>
         </div>
         <div class="allTime">{{allTime}}</div>
       </div>
@@ -66,7 +66,8 @@ export default {
       allTime: '00:00', // 当前音频总时长，格式化之后的
       duration: 0, // 音频总时长，单位秒
       currentTime: 0, // 音频当前播放时间， 单位秒
-      precent: '0%' // 当前播放进度百分比
+      precent: '0%', // 当前播放进度百分比
+      touchInfo: {} // 原点滑动时的位置信息
     }
   },
   computed: {
@@ -123,10 +124,30 @@ export default {
     },
     clickProgress (event) { // 点击进度条时 更新音频时间和进度条
       const e = event || window.event
-      const position = e.clientX - e.currentTarget.offsetLeft// 当前点击的位置
-      const progressWidth = this.$refs.progress.offsetWidth
+      const position = e.clientX - e.currentTarget.offsetLeft // 当前点击的位置
+      const progressWidth = this.$refs.progress.offsetWidth // 进度条总宽度
       this.$refs.audio.currentTime = ((position / progressWidth) * this.duration)
       this.updateProgress(((position / progressWidth) * this.duration), this.duration)
+    },
+    dotStart (e) {
+      // 点击的初始位置
+      this.touchInfo.startX = e.touches[0].pageX - 83
+      console.log(this.touchInfo.startX)
+    },
+    dotMove (e) {
+      // 移动的距离
+      let moveX = e.touches[0].pageX - 83
+      console.log(moveX)
+      // 进度条的宽度
+      const progressWidth = this.$refs.progress.offsetWidth
+      if (moveX >= progressWidth) moveX = progressWidth
+
+      this.$refs.audio.currentTime = ((moveX / progressWidth) * this.duration)
+      this.updateProgress(((moveX / progressWidth) * this.duration), this.duration)
+    },
+    dotEnd (e) {
+      this.playSong()
+      this.isPlaying = true
     }
   },
   components: {
