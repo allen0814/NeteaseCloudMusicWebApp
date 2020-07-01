@@ -46,7 +46,7 @@ export default {
   data () {
     return {
       showGoBack: {
-        path: 'discover',
+        path: '/discover',
         show: 0
       },
       searchHistory: [], // 搜索历史记录

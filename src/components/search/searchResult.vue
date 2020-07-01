@@ -28,7 +28,7 @@ export default {
   data () {
     return {
       showGoBack: {
-        path: 'search',
+        path: '/search',
         show: 1,
         style: { position: 'fixed', padding: '0 5%' }
       },

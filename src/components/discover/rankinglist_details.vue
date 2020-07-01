@@ -8,7 +8,7 @@
       <p class="description">{{playlist.description}}</p>
     </div> -->
     <div class="songlist">
-      <div class="single" v-for='(item, i) in tracks' :key="item.id" :data-songId='item.id'>
+      <div class="single" v-for='(item, i) in tracks' :key="item.id" :data-songId='item.id' :data-index='i' @click="play($event)">
         <!-- <img :src="item.al.picUrl" alt="" width="40px" height="40px"> -->
         <div :style="{color: i <= 2 ? 'red' : '#a39f9f'}">{{i + 1}}</div>
         <div class="info">
@@ -32,7 +32,7 @@ export default {
     return {
       showGoBack: {
         show: 1,
-        path: 'discover/rankinglist',
+        path: '/discover/rankinglist',
         style: { position: 'fixed', padding: '0 5%' }
       },
       tracks: [],
@@ -73,7 +73,6 @@ export default {
   },
   methods: {
     getPlayList () {
-      this.showGoBack.title = sessionStorage.getItem('rankingType')
       const id = this.$route.query.id
       this.showGoBack.title = this.$route.query.name
       this.$axios.get(`/top/list?id=${id}`).then(res => {
@@ -82,10 +81,64 @@ export default {
           this.tracks = res.playlist.tracks
         }
       })
+    },
+    async play (event) {
+      const e = event || window.event
+      const target = e.currentTarget
+      const id = target.getAttribute('data-songId')
+      const useable = await this.$axios.get(`/check/music?id=${id}`)
+      if (useable.success) {
+        this.$axios.get(`/song/url?id=${id}`).then(res => {
+          if (res.code === 200) {
+            console.log(res.data[0].url)
+            this.$router.push({ path: '/play', query: { id } })
+
+            const index = target.getAttribute('data-index')
+            const playingSongInfo = {}
+            let names = ''
+            if (this.tracks[index].ar.length === 1) {
+              playingSongInfo.singer = this.tracks[index].ar[0].name
+            } else {
+              this.tracks[index].ar.forEach(ele => { names += `${ele.name} ` })
+              playingSongInfo.singer = names
+            }
+            playingSongInfo.id = this.tracks[index].id
+            playingSongInfo.blurPicUrl = this.tracks[index].al.picUrl
+            playingSongInfo.name = this.tracks[index].name
+            playingSongInfo.url = res.data[0].url
+
+            if (res.data[0].url === null) {
+              this.$message.error('无法获取当前歌曲的地址,页面将在3s后跳转！')
+              setTimeout(() => {
+                this.$router.push('/discover/recommend')
+              }, 3000)
+            }
+
+            localStorage.setItem('playingSong', JSON.stringify(playingSongInfo))
+            console.log(this.$route.path.slice(1))
+          }
+        })
+      } else {
+        this.$message.error(`${useable.message}`)
+      }
+
+      // 请求歌词
+      this.$axios.get(`/lyric?id=${id}`).then(res => {
+        if (res.code === 200) {
+          const lyrics = {}
+          lyrics.lyric = res.lrc.lyric
+          lyrics.tlyric = res.tlyric.lyric
+          localStorage.setItem('lyrics', JSON.stringify(lyrics))
+        }
+      })
     }
   },
   components: {
     goBack
+  },
+  beforeRouteLeave (to, from, next) {
+    localStorage.setItem('routeBeforePlay', JSON.stringify(`${from.path}?id=${from.query.id}&name=${from.query.name}`))
+    next()
   }
 }
 </script>

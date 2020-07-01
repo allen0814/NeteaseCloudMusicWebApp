@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     back () {
-      this.$router.push(`/${this.showGoBack.path}`)
+      this.$router.push(`${this.showGoBack.path}`)
     }
   },
   components: {

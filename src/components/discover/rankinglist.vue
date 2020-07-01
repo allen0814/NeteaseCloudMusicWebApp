@@ -43,7 +43,7 @@ export default {
       showGoBack: {
         title: '排行榜',
         show: 1,
-        path: 'discover'
+        path: '/discover'
       },
       officiallist: [], // 官方榜
       otherList: [], // 其他榜单

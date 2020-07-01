@@ -29,7 +29,7 @@ export default {
       showGoBack: {
         title: '每日推荐',
         show: 1,
-        path: 'discover'
+        path: '/discover'
       },
       recommendList: []
     }
@@ -62,7 +62,6 @@ export default {
             console.log(res.data[0].url)
             this.$router.push({ path: '/play', query: { id } })
 
-            // 获取到当前播放歌曲的详细信息 存储到vuex里面
             const index = target.getAttribute('data-index')
             const playingSongInfo = {}
             let names = ''
@@ -104,6 +103,10 @@ export default {
   },
   components: {
     goBack
+  },
+  beforeRouteLeave (to, from, next) {
+    localStorage.setItem('routeBeforePlay', JSON.stringify(`${from.path}?id=${from.query.id}&name=${from.query.name}`))
+    next()
   }
 }
 </script>
