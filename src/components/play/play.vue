@@ -15,20 +15,7 @@
       </div>
       <div class="lyrics-container">
         <ul>
-          <li class="active">111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
-          <li>111</li>
+          <li v-for="item in lyricsObjArr" :key="item.uid">{{item.lyric}}</li>
         </ul>
       </div>
     </div>
@@ -73,7 +60,7 @@ export default {
       showGoBack: {
         title: '',
         show: 1,
-        path: 'discover/recommend',
+        path: '',
         style: { padding: '5% 0 0 5%', color: '#fff' }
       },
       playingSong: {}, // 正在播放的歌曲信息
@@ -86,7 +73,9 @@ export default {
       currentTime: 0, // 音频当前播放时间， 单位秒
       precent: '0%', // 当前播放进度百分比
       touchInfo: {}, // 原点滑动时的位置信息
-      lyrics: {} // 歌词 中英文
+      lyrics: {}, // 歌词 中英文
+      lyricsObjArr: [], // 处理之后的歌词 包含时间和歌词
+      curMsTime: '' // 当前音频播放的时分毫秒
     }
   },
   computed: {
@@ -95,6 +84,7 @@ export default {
   created () {
     this.playingSong = JSON.parse(localStorage.playingSong)
     this.showGoBack.title = `${this.playingSong.name} - ${this.playingSong.singer}`
+    this.showGoBack.path = JSON.parse(localStorage.routeBeforePlay)
     this.musicUrl = this.playingSong.url
     this.getLyrics()
   },
@@ -130,12 +120,15 @@ export default {
       const { currentTime } = e.target
       this.currentTime = currentTime
       this.curTime = this.formatTime(currentTime)
+      this.curMsTime = (this.formatTime(currentTime, true))
       this.updateProgress(currentTime, this.duration)
     },
-    formatTime (time) {
+    formatTime (time, toMS = false) {
+      if (time === 0) return
       const mins = Math.floor(time / 60) < 10 ? `0${Math.floor(time / 60)}` : Math.floor(time / 60)
       const sec = Math.floor(time % 60) < 10 ? `0${Math.floor(time % 60)}` : Math.floor(time % 60)
-      return `${mins}:${sec}`
+      const ms = time.toString().split('.')[1].slice(0, 2)
+      return !toMS ? `${mins}:${sec}` : `${mins}:${sec}.${ms}`
     },
     ended () {
       this.$refs.cd.classList.remove('rotate')
@@ -174,7 +167,23 @@ export default {
     },
     analysisLyrics (lyrics) { // 解析歌词
       const olyrics = lyrics.lyric
-      console.log(olyrics)
+      this.lyricsObjArr = this.lyric2ObjArr(olyrics)
+      // console.log(this.lyricsObjArr)
+    },
+    lyric2ObjArr (lyric) {
+      const regNewLine = /\n/
+      const regTime = /\[.*\]/
+      const lineArr = lyric.split(regNewLine) // 每行歌词的数组
+      const lyricObjArr = [] // 歌词对象数组 [{time: '', lyric: ''}]
+      lineArr.forEach(item => {
+        if (item === '') return
+        const obj = {}
+        obj.time = item.match(regTime)[0].slice(1, item.match(regTime)[0].length - 1)
+        obj.lyric = item.split(']')[1].trim()
+        obj.uid = Math.random().toString().slice(-6)
+        lyricObjArr.push(obj)
+      })
+      return lyricObjArr
     }
   },
   components: {
@@ -243,16 +252,16 @@ export default {
   }
   &-container{
     height: 75%;
-    font-size: 20px;
+    font-size: 16px;
     overflow: hidden;
     ul{
       text-align: center;
       li{
-        color: #a39f9f;
+        color: #ded9d9;
         line-height: 30px;
       }
       li.active{
-        color: #fff;
+        color: skyblue;
       }
     }
   }
