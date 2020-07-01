@@ -74,8 +74,9 @@ export default {
   methods: {
     getPlayList () {
       this.showGoBack.title = sessionStorage.getItem('rankingType')
-      const selectedIndex = sessionStorage.getItem('rankingListIndex')
-      this.$axios.get(`/top/list?idx=${selectedIndex}`).then(res => {
+      const id = this.$route.query.id
+      this.showGoBack.title = this.$route.query.name
+      this.$axios.get(`/top/list?id=${id}`).then(res => {
         if (res.code === 200) {
           this.playlist = res.playlist
           this.tracks = res.playlist.tracks

@@ -7,7 +7,7 @@
     <!-- 官方榜 -->
     <h2>官方榜</h2>
     <div class="official">
-      <div class="list-single" v-for="(item) in officiallist" :key="item.playCount" :data-name='item.name' @click.stop="toDetails($event)" ref="single">
+      <div class="list-single" v-for="(item) in officiallist" :key="item.playCount" :data-name='item.name' :data-listid='item.id' @click.stop="toDetails($event)" ref="single">
         <div class="list-single-left">
           <img :src="item.coverImgUrl" :alt="item.name">
           <span :data-name='item.name'>{{item.updateFrequency}}</span>
@@ -111,15 +111,17 @@ export default {
     toDetails (e) {
       const evn = e || window.event
       const target = evn.currentTarget
-      const rankingType = target.getAttribute('data-name')
-      Object.keys(this.rankingIndex).forEach(ele => {
-        if (rankingType === ele) {
-          this.selectedIndex = this.rankingIndex[ele].toString()
-          sessionStorage.setItem('rankingListIndex', this.selectedIndex)
-          sessionStorage.setItem('rankingType', rankingType)
-          this.$router.push({ name: 'rankinglist_details' })
-        }
-      })
+      const listId = target.getAttribute('data-listID')
+      const listName = target.getAttribute('data-name')
+      this.$router.push({ name: 'rankinglist_details', query: { id: listId, name: listName } })
+      // Object.keys(this.rankingIndex).forEach(ele => {
+      //   if (rankingType === ele) {
+      //     this.selectedIndex = this.rankingIndex[ele].toString()
+      //     sessionStorage.setItem('rankingListIndex', this.selectedIndex)
+      //     sessionStorage.setItem('rankingType', rankingType)
+      //     this.$router.push({ name: 'rankinglist_details' })
+      //   }
+      // })
     }
   },
   components: {
