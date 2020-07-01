@@ -9,10 +9,28 @@
       <img :src="playingSong.blurPicUrl" width="60%">
     </div>
     <div class="lyrics" v-show="!show" @click="show = !show">
-       <div class="volume">
-         <i class="fa fa-volume-up"></i>
-         <div class="volumeRange"><input type="range" min="0" max="100" value="100" step="1"></div>
-         </div>
+      <div class="volume">
+        <i class="fa fa-volume-up"></i>
+        <div class="volumeRange"><input type="range" min="0" max="100" value="100" step="1"></div>
+      </div>
+      <div class="lyrics-container">
+        <ul>
+          <li class="active">111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+          <li>111</li>
+        </ul>
+      </div>
     </div>
 
     <!-- 下方控件 -->
@@ -59,7 +77,7 @@ export default {
         style: { padding: '5% 0 0 5%', color: '#fff' }
       },
       playingSong: {}, // 正在播放的歌曲信息
-      show: true, // 控制cd和lyrics的显示 默认显示cd
+      show: false, // 控制cd和lyrics的显示 默认显示cd
       isPlaying: false, // 播放和暂停状态
       musicUrl: '', // 音乐地址
       curTime: '00:00', // 当前播放时间，格式化之后的
@@ -67,7 +85,8 @@ export default {
       duration: 0, // 音频总时长，单位秒
       currentTime: 0, // 音频当前播放时间， 单位秒
       precent: '0%', // 当前播放进度百分比
-      touchInfo: {} // 原点滑动时的位置信息
+      touchInfo: {}, // 原点滑动时的位置信息
+      lyrics: {} // 歌词 中英文
     }
   },
   computed: {
@@ -77,6 +96,7 @@ export default {
     this.playingSong = JSON.parse(localStorage.playingSong)
     this.showGoBack.title = `${this.playingSong.name} - ${this.playingSong.singer}`
     this.musicUrl = this.playingSong.url
+    this.getLyrics()
   },
   mounted () {
 
@@ -85,6 +105,11 @@ export default {
 
   },
   methods: {
+    getLyrics () { // 获取歌词
+      this.lyrics = JSON.parse(localStorage.lyrics)
+      // console.log(this.lyrics)
+      this.analysisLyrics(this.lyrics)
+    },
     playSong () { // 播放歌曲
       const audio = this.$refs.audio
       this.isPlaying = !this.isPlaying
@@ -132,12 +157,10 @@ export default {
     dotStart (e) {
       // 点击的初始位置
       this.touchInfo.startX = e.touches[0].pageX - 83
-      console.log(this.touchInfo.startX)
     },
     dotMove (e) {
       // 移动的距离
       let moveX = e.touches[0].pageX - 83
-      console.log(moveX)
       // 进度条的宽度
       const progressWidth = this.$refs.progress.offsetWidth
       if (moveX >= progressWidth) moveX = progressWidth
@@ -148,6 +171,10 @@ export default {
     dotEnd (e) {
       this.playSong()
       this.isPlaying = true
+    },
+    analysisLyrics (lyrics) { // 解析歌词
+      const olyrics = lyrics.lyric
+      console.log(olyrics)
     }
   },
   components: {
@@ -178,6 +205,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background: rgba(0, 0, 0, .2);
 }
 .cd{
   height: 60%;
@@ -196,11 +224,14 @@ export default {
   -webkit-animation-play-state:paused; /* Safari 和 Chrome */
 }
 .lyrics{
-  height: 60%;
-  // background-color: skyblue;
+  height: 70%;
+  box-sizing: border-box;
+  padding: 0 5% 20% 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #fff;
   .volume{
-    color: #fff;
-    padding: 0 5%;
     display: flex;
     align-items: center;
     i{
@@ -210,9 +241,24 @@ export default {
       width: 100%;
     }
   }
+  &-container{
+    height: 75%;
+    font-size: 20px;
+    overflow: hidden;
+    ul{
+      text-align: center;
+      li{
+        color: #a39f9f;
+        line-height: 30px;
+      }
+      li.active{
+        color: #fff;
+      }
+    }
+  }
 }
 .bottom{
-  height: 30%;
+  height: 20%;
   color: #fff;
   &-line1{
     font-size: 30px;
@@ -251,7 +297,7 @@ export default {
     }
   }
   &-controls{
-    padding: 0 5%;
+    // padding: 0 5%;
     display: flex;
     align-items: center;
     justify-content: space-around;
