@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    searchResult: {} // 搜索结果 包含总数和数组
+    searchResult: {}, // 搜索结果 包含总数和数组
+    songPlayList: [] // 当前播放的歌曲列表
   },
   getters: {
     searchResCount: state => {
@@ -18,11 +19,17 @@ export default new Vuex.Store({
   mutations: {
     SET_SEARCH_RESULT: (state, res) => {
       state.searchResult = res
+    },
+    SET_SONG_PLAY_LIST: (state, res) => {
+      state.songPlayList = res
     }
   },
   actions: {
     setSearchResult: ({ commit }, res) => {
       commit('SET_SEARCH_RESULT', res)
+    },
+    setSongPlayList: ({ commit }, res) => {
+      commit('SET_SONG_PLAY_LIST', res)
     }
   },
   modules: {

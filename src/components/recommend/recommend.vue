@@ -41,6 +41,31 @@ export default {
     this.$axios.get('/recommend/songs').then(res => {
       if (res.code === 200) {
         this.recommendList = res.data.dailySongs
+        const songListId = []
+        const songPlayList = [] // 当前播放歌曲列表  存到vuex
+        this.recommendList.forEach(ele => {
+          songListId.push(ele.id)
+        })
+        this.$axios.get(`/song/detail?ids=${songListId.join(',')}`).then(res => {
+          if (res.code === 200) {
+            for (let i = 0; i < res.songs.length; i++) {
+              const obj = {}
+              let names = ''
+              obj.id = res.songs[i].id
+              obj.alName = res.songs[i].al.name
+              if (res.songs[i].ar.length === 1) {
+                obj.singerName = res.songs[i].ar[0].name
+              } else {
+                res.songs[i].ar.forEach(ele => { names += `${ele.name}/` })
+                obj.singerName = names.slice(0, names.length - 1)
+              }
+              obj.songName = res.songs[i].name
+              obj.picUrl = res.songs[i].al.picUrl
+              songPlayList.push(obj)
+            }
+            this.$store.dispatch('setSongPlayList', songPlayList)
+          }
+        })
       }
     })
   },
@@ -68,8 +93,8 @@ export default {
             if (this.recommendList[index].ar.length === 1) {
               playingSongInfo.singer = this.recommendList[index].ar[0].name
             } else {
-              this.recommendList[index].ar.forEach(ele => { names += `${ele.name} ` })
-              playingSongInfo.singer = names
+              this.recommendList[index].ar.forEach(ele => { names += `${ele.name}/` })
+              playingSongInfo.singer = names.slice(0, names.length - 1)
             }
             playingSongInfo.id = this.recommendList[index].id
             playingSongInfo.blurPicUrl = this.recommendList[index].al.picUrl
