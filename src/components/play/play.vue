@@ -23,7 +23,8 @@
     <!-- 下方控件 -->
     <div class="bottom">
       <div class="bottom-line1">
-        <div class="like"><i class="fa fa-heart-o"></i></div>
+        <div class="like" v-show="like"><i class="fa fa-heart-o"></i></div>
+        <div class="like like-yes" v-show="!like"><i class="fa fa-heart"></i></div>
         <div class="download"><i class="fa fa-download"></i></div>
         <div class="comment"><i class="fa fa-commenting-o"></i></div>
       </div>
@@ -75,20 +76,21 @@ export default {
       touchInfo: {}, // 原点滑动时的位置信息
       lyrics: {}, // 歌词 中英文
       lyricsObjArr: [], // 处理之后的歌词 包含时间和歌词
-      curMsTime: '' // 当前音频播放的时分毫秒
+      curMsTime: '', // 当前音频播放的时分毫秒
+      like: false // 是否喜欢当前歌曲 默认为不喜欢
     }
   },
   computed: {
-    // playingSong () {
-    //   return this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
-    // }
+    likeList () {
+      return this.$store.state.likeList
+    }
   },
   created () {
     this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
     this.showGoBack.path = JSON.parse(localStorage.routeBeforePlay)
     this.loadMusic()
     this.getLyrics()
-    this.getMusicUrl()
+    // this.getMusicUrl()
   },
   mounted () {
     this.autoPlaySong()
@@ -124,9 +126,14 @@ export default {
         }
       })
     },
+    getLikeStatus () { // 获取当前歌曲的喜欢状态
+      console.log(this.likeList.indexOf(this.playingSong.id))
+      this.likeList.indexOf(this.playingSong.id) !== -1 ? this.like = false : this.like = true
+    },
     loadMusic () { // 加载歌曲 - 名称 图片 播放地址
       this.showGoBack.title = `${this.playingSong.songName} - ${this.playingSong.singerName}`
       this.getMusicUrl()
+      this.getLikeStatus()
     },
     playSong () { // 手动点击播放歌曲
       const audio = this.$refs.audio
@@ -328,6 +335,11 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-around;
+    .like-yes{
+      i{
+        color: #C20C0C;
+      }
+    }
   }
   &-progress{
     padding: 0 5%;

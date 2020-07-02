@@ -6,14 +6,18 @@
 
 <script>
 export default {
+  created () {
+    this.getLikeList()
+  },
   mounted () {
-    // 让vuex的数据在刷新之后不消失
-    window.addEventListener('unload', this.saveSearchList)
   },
   methods: {
-    saveSearchList () {
-      // sessionStorage.setItem('searchResult', JSON.stringify(this.$store.getters.searchResArr))
-      // this.$store.dispatch('setSearchResult', this.$store.getters.searchResArr)
+    getLikeList () {
+      this.$axios.get(`/likelist?uid=${JSON.parse(localStorage.uid)}`).then(res => {
+        if (res.code === 200) {
+          this.$store.dispatch('setLikeList', res.ids)
+        }
+      })
     }
   }
 }
