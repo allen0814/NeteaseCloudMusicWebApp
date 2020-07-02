@@ -99,8 +99,8 @@ export default {
             if (this.tracks[index].ar.length === 1) {
               playingSongInfo.singer = this.tracks[index].ar[0].name
             } else {
-              this.tracks[index].ar.forEach(ele => { names += `${ele.name} ` })
-              playingSongInfo.singer = names
+              this.tracks[index].ar.forEach(ele => { names += `${ele.name}/` })
+              playingSongInfo.singer = names.slice(0, names.length - 1)
             }
             playingSongInfo.id = this.tracks[index].id
             playingSongInfo.blurPicUrl = this.tracks[index].al.picUrl
