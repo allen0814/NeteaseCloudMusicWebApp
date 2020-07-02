@@ -88,27 +88,6 @@ export default {
             this.$router.push({ path: '/play', query: { id } })
 
             const index = target.getAttribute('data-index')
-            const playingSongInfo = {}
-            let names = ''
-            if (this.recommendList[index].ar.length === 1) {
-              playingSongInfo.singer = this.recommendList[index].ar[0].name
-            } else {
-              this.recommendList[index].ar.forEach(ele => { names += `${ele.name}/` })
-              playingSongInfo.singer = names.slice(0, names.length - 1)
-            }
-            playingSongInfo.id = this.recommendList[index].id
-            playingSongInfo.blurPicUrl = this.recommendList[index].al.picUrl
-            playingSongInfo.name = this.recommendList[index].name
-            playingSongInfo.url = res.data[0].url
-
-            // if (res.data[0].url === null) {
-            //   this.$message.error('无法获取当前歌曲的地址,页面将在3s后跳转！')
-            //   setTimeout(() => {
-            //     this.$router.push('/discover/recommend')
-            //   }, 3000)
-            // }
-
-            // localStorage.setItem('playingSong', JSON.stringify(playingSongInfo))
             localStorage.setItem('curSongPlayIndex', index)
           }
         })

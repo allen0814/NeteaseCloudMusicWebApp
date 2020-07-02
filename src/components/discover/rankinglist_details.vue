@@ -79,6 +79,32 @@ export default {
         if (res.code === 200) {
           this.playlist = res.playlist
           this.tracks = res.playlist.tracks
+
+          const songListId = []
+          const songPlayList = [] // 当前播放歌曲列表  存到vuex
+          this.tracks.forEach(ele => {
+            songListId.push(ele.id)
+          })
+          this.$axios.get(`/song/detail?ids=${songListId.join(',')}`).then(res => {
+            if (res.code === 200) {
+              for (let i = 0; i < res.songs.length; i++) {
+                const obj = {}
+                let names = ''
+                obj.id = res.songs[i].id
+                obj.alName = res.songs[i].al.name
+                if (res.songs[i].ar.length === 1) {
+                  obj.singerName = res.songs[i].ar[0].name
+                } else {
+                  res.songs[i].ar.forEach(ele => { names += `${ele.name}/` })
+                  obj.singerName = names.slice(0, names.length - 1)
+                }
+                obj.songName = res.songs[i].name
+                obj.blurPicUrl = res.songs[i].al.picUrl
+                songPlayList.push(obj)
+              }
+              this.$store.dispatch('setSongPlayList', songPlayList)
+            }
+          })
         }
       })
     },
@@ -94,43 +120,12 @@ export default {
             this.$router.push({ path: '/play', query: { id } })
 
             const index = target.getAttribute('data-index')
-            const playingSongInfo = {}
-            let names = ''
-            if (this.tracks[index].ar.length === 1) {
-              playingSongInfo.singer = this.tracks[index].ar[0].name
-            } else {
-              this.tracks[index].ar.forEach(ele => { names += `${ele.name}/` })
-              playingSongInfo.singer = names.slice(0, names.length - 1)
-            }
-            playingSongInfo.id = this.tracks[index].id
-            playingSongInfo.blurPicUrl = this.tracks[index].al.picUrl
-            playingSongInfo.name = this.tracks[index].name
-            playingSongInfo.url = res.data[0].url
-
-            if (res.data[0].url === null) {
-              this.$message.error('无法获取当前歌曲的地址,页面将在3s后跳转！')
-              setTimeout(() => {
-                this.$router.push('/discover/recommend')
-              }, 3000)
-            }
-
-            localStorage.setItem('playingSong', JSON.stringify(playingSongInfo))
-            console.log(this.$route.path.slice(1))
+            localStorage.setItem('curSongPlayIndex', index)
           }
         })
       } else {
         this.$message.error(`${useable.message}`)
       }
-
-      // 请求歌词
-      this.$axios.get(`/lyric?id=${id}`).then(res => {
-        if (res.code === 200) {
-          const lyrics = {}
-          lyrics.lyric = res.lrc.lyric
-          lyrics.tlyric = res.tlyric.lyric
-          localStorage.setItem('lyrics', JSON.stringify(lyrics))
-        }
-      })
     }
   },
   components: {
