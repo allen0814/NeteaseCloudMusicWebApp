@@ -60,7 +60,7 @@ export default {
                 obj.singerName = names.slice(0, names.length - 1)
               }
               obj.songName = res.songs[i].name
-              obj.picUrl = res.songs[i].al.picUrl
+              obj.blurPicUrl = res.songs[i].al.picUrl
               songPlayList.push(obj)
             }
             this.$store.dispatch('setSongPlayList', songPlayList)
@@ -101,29 +101,20 @@ export default {
             playingSongInfo.name = this.recommendList[index].name
             playingSongInfo.url = res.data[0].url
 
-            if (res.data[0].url === null) {
-              this.$message.error('无法获取当前歌曲的地址,页面将在3s后跳转！')
-              setTimeout(() => {
-                this.$router.push('/discover/recommend')
-              }, 3000)
-            }
+            // if (res.data[0].url === null) {
+            //   this.$message.error('无法获取当前歌曲的地址,页面将在3s后跳转！')
+            //   setTimeout(() => {
+            //     this.$router.push('/discover/recommend')
+            //   }, 3000)
+            // }
 
-            localStorage.setItem('playingSong', JSON.stringify(playingSongInfo))
+            // localStorage.setItem('playingSong', JSON.stringify(playingSongInfo))
+            localStorage.setItem('curSongPlayIndex', index)
           }
         })
       } else {
         this.$message.error(`${useable.message}`)
       }
-
-      // 请求歌词
-      this.$axios.get(`/lyric?id=${id}`).then(res => {
-        if (res.code === 200) {
-          const lyrics = {}
-          lyrics.lyric = res.lrc.lyric
-          lyrics.tlyric = res.tlyric.lyric
-          localStorage.setItem('lyrics', JSON.stringify(lyrics))
-        }
-      })
     }
   },
   components: {

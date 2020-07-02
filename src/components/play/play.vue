@@ -36,10 +36,10 @@
         <div class="allTime">{{allTime}}</div>
       </div>
       <div class="bottom-controls">
-        <div class="prev"><i class="fa fa-step-backward"></i></div>
+        <div class="prev" @click="prevSong"><i class="fa fa-step-backward"></i></div>
         <div class="pause" v-show="isPlaying" @click="pauseSong"><i class="fa fa-pause"></i></div>
         <div class="play" v-show="!isPlaying" @click="playSong"><i class="fa fa-play"></i></div>
-        <div class="next"><i class="fa fa-step-forward"></i></div>
+        <div class="next" @click="nextSong"><i class="fa fa-step-forward"></i></div>
       </div>
     </div>
 
@@ -64,7 +64,7 @@ export default {
         style: { padding: '5% 0 0 5%', color: '#fff' }
       },
       playingSong: {}, // 正在播放的歌曲信息
-      show: false, // 控制cd和lyrics的显示 默认显示cd
+      show: true, // 控制cd和lyrics的显示 默认显示cd
       isPlaying: false, // 播放和暂停状态
       musicUrl: '', // 音乐地址
       curTime: '00:00', // 当前播放时间，格式化之后的
@@ -79,33 +79,84 @@ export default {
     }
   },
   computed: {
-
+    // playingSong () {
+    //   return this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
+    // }
   },
   created () {
-    this.playingSong = JSON.parse(localStorage.playingSong)
-    this.showGoBack.title = `${this.playingSong.name} - ${this.playingSong.singer}`
+    this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
     this.showGoBack.path = JSON.parse(localStorage.routeBeforePlay)
-    this.musicUrl = this.playingSong.url
+    this.loadMusic()
     this.getLyrics()
+    this.getMusicUrl()
   },
   mounted () {
-
+    this.autoPlaySong()
   },
   watch: {
 
   },
   methods: {
-    getLyrics () { // 获取歌词
-      this.lyrics = JSON.parse(localStorage.lyrics)
-      // console.log(this.lyrics)
-      this.analysisLyrics(this.lyrics)
+    getLyrics () { // 显示歌词
+      // 请求歌词
+      this.$axios.get(`/lyric?id=${this.playingSong.id}`).then(res => {
+        if (res.code === 200) {
+          const lyrics = {}
+          lyrics.lyric = res.lrc.lyric
+          lyrics.tlyric = res.tlyric.lyric
+          this.lyrics = lyrics
+          // 解析歌词
+          this.analysisLyrics(this.lyrics)
+        }
+      })
     },
-    playSong () { // 播放歌曲
+    getMusicUrl () { // 获取音乐url
+      this.$axios.get(`/song/url?id=${this.playingSong.id}`).then(res => {
+        if (res.code === 200) {
+          if (res.data[0].url === null) {
+            this.$message.warning('没有当前歌曲资源，3s后将自动播放下一首歌曲')
+            setTimeout(() => {
+              this.nextSong()
+            }, 3000)
+            return
+          }
+          this.musicUrl = res.data[0].url
+        }
+      })
+    },
+    loadMusic () { // 加载歌曲 - 名称 图片 播放地址
+      this.showGoBack.title = `${this.playingSong.songName} - ${this.playingSong.singerName}`
+      this.getMusicUrl()
+    },
+    playSong () { // 手动点击播放歌曲
       const audio = this.$refs.audio
       this.isPlaying = !this.isPlaying
       audio.play()
       this.$refs.cd.classList.add('rotate')
       if (this.$refs.cd.classList.contains('rotatePause')) this.$refs.cd.classList.remove('rotatePause')
+    },
+    autoPlaySong () { // 自动播放歌曲
+      const audio = this.$refs.audio
+      audio.autoplay = true
+      this.isPlaying = true
+      this.$refs.cd.classList.add('rotate')
+      if (this.$refs.cd.classList.contains('rotatePause')) this.$refs.cd.classList.remove('rotatePause')
+    },
+    nextSong () { // 播放下一首歌曲
+      localStorage.curSongPlayIndex++
+      if (localStorage.curSongPlayIndex > this.$store.state.songPlayList.length) localStorage.curSongPlayIndex = 0
+      this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
+      this.loadMusic()
+      this.getLyrics()
+      this.autoPlaySong()
+    },
+    prevSong () { // 播放上一首歌曲
+      localStorage.curSongPlayIndex--
+      if (localStorage.curSongPlayIndex < 0) localStorage.curSongPlayIndex = this.$store.state.songPlayList.length - 1
+      this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
+      this.loadMusic()
+      this.getLyrics()
+      this.autoPlaySong()
     },
     pauseSong () { // 暂停歌曲
       this.isPlaying = !this.isPlaying
@@ -137,6 +188,7 @@ export default {
       this.$refs.cd.classList.remove('rotate')
       this.$refs.audio.currentTime = 0
       this.isPlaying = false
+      this.nextSong()
       console.log('播放完毕')
     },
     updateProgress (currentTime, duration) { // 更新进度条
@@ -171,7 +223,6 @@ export default {
     analysisLyrics (lyrics) { // 解析歌词
       const olyrics = lyrics.lyric
       this.lyricsObjArr = this.lyric2ObjArr(olyrics)
-      // console.log(this.lyricsObjArr)
     },
     lyric2ObjArr (lyric) {
       const regNewLine = /\n/
