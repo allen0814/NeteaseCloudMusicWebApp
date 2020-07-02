@@ -124,7 +124,10 @@ export default {
       this.updateProgress(currentTime, this.duration)
     },
     formatTime (time, toMS = false) {
-      if (time === 0) return
+      if (time === 0) {
+        this.curTime = '00:00'
+        return
+      }
       const mins = Math.floor(time / 60) < 10 ? `0${Math.floor(time / 60)}` : Math.floor(time / 60)
       const sec = Math.floor(time % 60) < 10 ? `0${Math.floor(time % 60)}` : Math.floor(time % 60)
       const ms = time.toString().split('.')[1].slice(0, 2)
@@ -226,7 +229,7 @@ export default {
   }
 }
 .cd.rotate img{
-  animation: rotateIMG 5s linear infinite;
+  animation: rotateIMG 15s linear infinite;
 }
 .cd.rotatePause img{
  animation-play-state:paused;
