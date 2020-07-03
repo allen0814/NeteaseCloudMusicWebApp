@@ -23,8 +23,8 @@
     <!-- 下方控件 -->
     <div class="bottom">
       <div class="bottom-line1">
-        <div class="like" v-show="like"><i class="fa fa-heart-o"></i></div>
-        <div class="like like-yes" v-show="!like"><i class="fa fa-heart"></i></div>
+        <div class="like" @click="toggleLikeMusic" v-show="!like"><i class="fa fa-heart-o"></i></div>
+        <div class="like like-yes" @click="toggleLikeMusic(false)" v-show="like"><i class="fa fa-heart"></i></div>
         <div class="download"><i class="fa fa-download"></i></div>
         <div class="comment"><i class="fa fa-commenting-o"></i></div>
       </div>
@@ -125,7 +125,7 @@ export default {
       })
     },
     getLikeStatus () { // 获取当前歌曲的喜欢状态
-      this.likeList.indexOf(this.playingSong.id) !== -1 ? this.like = false : this.like = true
+      this.likeList.indexOf(this.playingSong.id) !== -1 ? this.like = true : this.like = false
     },
     loadMusic () { // 加载歌曲 - 名称 图片 播放地址
       this.showGoBack.title = `${this.playingSong.songName} - ${this.playingSong.singerName}`
@@ -146,6 +146,7 @@ export default {
       this.isPlaying = true
       this.$refs.cd.classList.add('rotate')
       if (this.$refs.cd.classList.contains('rotatePause')) this.$refs.cd.classList.remove('rotatePause')
+      this.getLikeStatus()
     },
     nextSong () { // 播放下一首歌曲
       localStorage.curSongPlayIndex++
@@ -241,10 +242,36 @@ export default {
         lyricObjArr.push(obj)
       })
       return lyricObjArr
+    },
+    toggleLikeMusic (like = true) { // like为true表示默认点击喜欢音乐 传入false表示取消喜欢
+      like ? this.like = true : this.like = false
+      this.$axios.get(`/like?id=${this.playingSong.id}&like=${like}`).then(res => {
+        if (res.code === 200) {
+          like
+            ? this.$message.success('已成功添加到喜欢的音乐')
+            : this.$message.success('你抛弃了她！')
+        } else {
+          this.showLikeErrorMsg(like)
+        }
+      })
+    },
+    showLikeErrorMsg (likeStatus) {
+      if (likeStatus) {
+        this.like = false
+        this.$message.error('不好意思，歌曲不喜欢你！')
+      } else {
+        this.like = true
+        this.$message.error('不好意思，她舍不得离开你！')
+      }
     }
   },
   components: {
     goBack
+  },
+  beforeRouteEnter (to, from, next) {
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+    next()
   }
 }
 </script>
