@@ -26,7 +26,7 @@
         <div class="like" @click="toggleLikeMusic" v-show="!like"><i class="fa fa-heart-o"></i></div>
         <div class="like like-yes" @click="toggleLikeMusic(false)" v-show="like"><i class="fa fa-heart"></i></div>
         <div class="download"><i class="fa fa-download"></i></div>
-        <div class="comment"><i class="fa fa-commenting-o"></i></div>
+        <div class="comment" @click="showComment"><i class="fa fa-commenting-o"></i></div>
       </div>
       <div class="bottom-progress">
         <div class="curTime">{{curTime}}</div>
@@ -263,6 +263,9 @@ export default {
         this.like = true
         this.$message.error('不好意思，她舍不得离开你！')
       }
+    },
+    showComment () { // 显示评论组件
+
     }
   },
   components: {
