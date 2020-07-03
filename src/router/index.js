@@ -69,6 +69,11 @@ const routes = [
     path: '/play', // 发现 - 每日推荐
     name: 'play',
     component: () => import('@components/play/play.vue')
+  },
+  {
+    path: '/mine/like', // 我的 - 我喜欢的音乐
+    name: 'like',
+    component: () => import('@components/mine/likeList.vue')
   }
 ]
 
