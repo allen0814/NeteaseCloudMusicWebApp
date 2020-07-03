@@ -66,7 +66,7 @@ const routes = [
     component: () => import('@components/recommend/recommend.vue')
   },
   {
-    path: '/play', // 发现 - 每日推荐
+    path: '/play', // 播放页面
     name: 'play',
     component: () => import('@components/play/play.vue')
   },
@@ -74,6 +74,11 @@ const routes = [
     path: '/mine/like', // 我的 - 我喜欢的音乐
     name: 'like',
     component: () => import('@components/mine/likeList.vue')
+  },
+  {
+    path: '/comment', // 播放页面
+    name: 'comment',
+    component: () => import('@components/comment/comment.vue')
   }
 ]
 
