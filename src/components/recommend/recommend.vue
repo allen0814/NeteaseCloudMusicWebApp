@@ -100,7 +100,7 @@ export default {
     goBack
   },
   beforeRouteLeave (to, from, next) {
-    localStorage.setItem('routeBeforePlay', JSON.stringify(`${from.path}?id=${from.query.id}&name=${from.query.name}`))
+    localStorage.setItem('routeBeforePlay', JSON.stringify(from.path))
     next()
   }
 }
