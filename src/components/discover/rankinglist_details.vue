@@ -3,27 +3,13 @@
   <div class="rankinglist-detail">
     <goBack :showGoBack='showGoBack'/>
     <div style="height: 36px"></div>
-    <!-- <div class="describe">
-      <img :src="playlist.coverImgUrl" alt="" width="100%" height="300px">
-      <p class="description">{{playlist.description}}</p>
-    </div> -->
-    <div class="songlist">
-      <div class="single" v-for='(item, i) in tracks' :key="item.id" :data-songId='item.id' :data-index='i' @click="play($event)">
-        <!-- <img :src="item.al.picUrl" alt="" width="40px" height="40px"> -->
-        <div :style="{color: i <= 2 ? 'red' : '#a39f9f'}">{{i + 1}}</div>
-        <div class="info">
-          <div class="name">{{item.name}}</div>
-          <div class="singer" v-if="item.ar.length === 1"><span>{{item.ar[0].name}}</span> - {{item.al.name}}</div>
-          <div class="singer" v-else><span v-for="singer in item.ar" :key="singer.id">{{singer.name}} </span> - {{item.al.name}}</div>
-        </div>
-        <div class="play"><i class="fa fa-play-circle-o"></i></div>
-      </div>
-    </div>
+    <songList :songListData='$store.state.songPlayList'/>
   </div>
 </template>
 
 <script>
 import goBack from '@components/public/goBack.vue'
+import songList from '@components/public/songList.vue'
 export default {
   props: {
 
@@ -129,7 +115,8 @@ export default {
     }
   },
   components: {
-    goBack
+    goBack,
+    songList
   },
   beforeRouteLeave (to, from, next) {
     localStorage.setItem('routeBeforePlay', JSON.stringify(`${from.path}?id=${from.query.id}&name=${from.query.name}`))
@@ -157,39 +144,6 @@ export default {
     color: #fff;
     font-size: 14px;
     line-height: 20px;
-  }
-}
-.songlist{
-  padding: 0 5%;
-  .single{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    box-shadow: 3px 5px 7px rgba(0,0,0,.2);
-    padding: 10px;
-    box-sizing: border-box;
-    background-color: #E6E6FA;
-    border-radius: 4px;
-    color: rgb(12, 12, 12);
-    .info{
-      width: 80%;
-      .name{
-        font-weight: 600;
-        font-size: 14px;
-      }
-      .singer{
-        font-size: 11px;
-        margin-top: 8px;
-        color: #a39f9f;
-        overflow: hidden;
-        text-overflow:ellipsis;
-        white-space: nowrap;
-      }
-    }
-    .play{
-      width: 4%;
-    }
   }
 }
 </style>
