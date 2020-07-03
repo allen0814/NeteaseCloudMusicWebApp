@@ -56,7 +56,7 @@ export default {
     width: 50px;
     p{
       font-size: 11px;
-      letter-spacing: 1px;
+      // letter-spacing: 1px;
       margin-top: 5px;
       text-align: center;
     }
