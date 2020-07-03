@@ -89,8 +89,6 @@ export default {
     this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
     this.showGoBack.path = JSON.parse(localStorage.routeBeforePlay)
     this.loadMusic()
-    this.getLyrics()
-    // this.getMusicUrl()
   },
   mounted () {
     this.autoPlaySong()
@@ -127,12 +125,12 @@ export default {
       })
     },
     getLikeStatus () { // 获取当前歌曲的喜欢状态
-      console.log(this.likeList.indexOf(this.playingSong.id))
       this.likeList.indexOf(this.playingSong.id) !== -1 ? this.like = false : this.like = true
     },
     loadMusic () { // 加载歌曲 - 名称 图片 播放地址
       this.showGoBack.title = `${this.playingSong.songName} - ${this.playingSong.singerName}`
       this.getMusicUrl()
+      this.getLyrics()
       this.getLikeStatus()
     },
     playSong () { // 手动点击播放歌曲
@@ -154,7 +152,6 @@ export default {
       if (localStorage.curSongPlayIndex > this.$store.state.songPlayList.length) localStorage.curSongPlayIndex = 0
       this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
       this.loadMusic()
-      this.getLyrics()
       this.autoPlaySong()
     },
     prevSong () { // 播放上一首歌曲
@@ -162,7 +159,6 @@ export default {
       if (localStorage.curSongPlayIndex < 0) localStorage.curSongPlayIndex = this.$store.state.songPlayList.length - 1
       this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
       this.loadMusic()
-      this.getLyrics()
       this.autoPlaySong()
     },
     pauseSong () { // 暂停歌曲
