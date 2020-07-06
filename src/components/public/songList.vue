@@ -50,8 +50,6 @@ export default {
             localStorage.setItem('curSongPlayIndex', index)
           }
         })
-      } else {
-        this.$message.error(`${useable.message}`)
       }
     }
   },
