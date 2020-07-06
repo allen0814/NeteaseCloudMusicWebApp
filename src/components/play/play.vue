@@ -25,7 +25,7 @@
       <div class="bottom-line1">
         <div class="like" @click="toggleLikeMusic" v-show="!like"><i class="fa fa-heart-o"></i></div>
         <div class="like like-yes" @click="toggleLikeMusic(false)" v-show="like"><i class="fa fa-heart"></i></div>
-        <div class="download"><i class="fa fa-download"></i></div>
+        <div class="download" @click="download"><i class="fa fa-download"></i></div>
         <div class="comment" @click="showComment"><i class="fa fa-commenting-o"></i></div>
       </div>
       <div class="bottom-progress">
@@ -281,6 +281,12 @@ export default {
     },
     showComment () { // 显示评论组件
       this.showCommentPanel.show = !this.showCommentPanel.show
+    },
+    download () {
+      const a = document.createElement('a')
+      a.href = this.musicUrl
+      a.download = `${this.playingSong.songName} - ${this.playingSong.singerName}`
+      a.click()
     }
   },
   components: {
