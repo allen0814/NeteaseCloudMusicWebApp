@@ -214,6 +214,7 @@ export default {
       if (JSON.parse(localStorage.curSongPlayIndex) >= this.$store.state.songPlayList.length - 1) {
         // 请求有缓存，所以私人FM无法及时更新
         this.$router.push('/mine/personal_fm')
+        return
       }
       this.nextSong()
       console.log('播放完毕')

@@ -39,6 +39,10 @@ axios.defaults.withCredentials = true
 axios.defaults.timeout = 5000
 
 axios.interceptors.request.use(config => {
+  if (/get/i.test(config.method)) {
+    config.params = config.params || {}
+    config.params.t = Date.parse(new Date()) / 1000 // 添加时间戳
+  }
   // add cookie
   showFullScreenLoading()
   return config
