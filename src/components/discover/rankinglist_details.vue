@@ -2,14 +2,17 @@
 <template>
   <div class="rankinglist-detail">
     <goBack :showGoBack='showGoBack'/>
-    <div style="height: 36px"></div>
-    <songList :songListData='$store.state.songPlayList'/>
+    <!-- <div style="height: 36px"></div> -->
+    <div class="xzw" style="height: 100%; overflow: hidden" ref="roll">
+      <songList :songListData='$store.state.songPlayList'/>
+    </div>
   </div>
 </template>
 
 <script>
 import goBack from '@components/public/goBack.vue'
 import songList from '@components/public/songList.vue'
+import BScroll from 'better-scroll'
 export default {
   props: {
 
@@ -18,8 +21,7 @@ export default {
     return {
       showGoBack: {
         show: 1,
-        path: '/discover/rankinglist',
-        style: { position: 'fixed', padding: '0 5%' }
+        path: '/discover/rankinglist'
       },
       tracks: [],
       playlist: {} // 当前榜单所有数据
@@ -32,27 +34,27 @@ export default {
     this.getPlayList()
   },
   mounted () {
-    const _this = this
-    window.onscroll = function () {
-      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-      if (scrollTop > 40) {
-        _this.showGoBack.style = {
-          position: 'fixed',
-          top: 0,
-          color: '#fff',
-          height: '36px',
-          'line-height': '36px',
-          'background-color': '#dd001b',
-          transition: 'all 1s',
-          padding: '0 5%'
-        }
-      } else {
-        _this.showGoBack.style = {
-          position: 'fixed',
-          padding: '0 5%'
-        }
-      }
-    }
+    // window.onscroll = () => {
+    //   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    //   if (scrollTop > 40) {
+    //     this.showGoBack.style = {
+    //       position: 'fixed',
+    //       top: 0,
+    //       color: '#fff',
+    //       height: '36px',
+    //       'line-height': '36px',
+    //       'background-color': '#dd001b',
+    //       transition: 'all 1s',
+    //       padding: '0 5%'
+    //     }
+    //   } else {
+    //     this.showGoBack.style = {
+    //       position: 'fixed',
+    //       padding: '0 5%'
+    //     }
+    //   }
+    // }
+    this.scroll = new BScroll(this.$refs.roll)
   },
   watch: {
 

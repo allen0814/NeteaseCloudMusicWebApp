@@ -2,14 +2,16 @@
 <template>
   <div class="myLike-container">
     <goBack :showGoBack='showGoBack'/>
-    <div style="height: 36px"></div>
-    <songList :songListData='$store.state.songPlayList'/>
+    <div class="xzw" style="height: 100%; overflow: hidden" ref="roll">
+      <songList :songListData='$store.state.songPlayList'/>
+    </div>
   </div>
 </template>
 
 <script>
 import goBack from '@components/public/goBack.vue'
 import songList from '@components/public/songList.vue'
+import BScroll from 'better-scroll'
 export default {
   props: {
 
@@ -19,8 +21,7 @@ export default {
       showGoBack: {
         show: 1,
         path: '/mine',
-        title: '我喜欢的音乐',
-        style: { position: 'fixed', padding: '0 5%' }
+        title: '我喜欢的音乐'
       }
     }
   },
@@ -33,26 +34,27 @@ export default {
     this.setSongPlayList()
   },
   mounted () {
-    window.onscroll = () => {
-      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-      if (scrollTop > 40) {
-        this.showGoBack.style = {
-          position: 'fixed',
-          top: 0,
-          color: '#fff',
-          height: '36px',
-          'line-height': '36px',
-          'background-color': '#dd001b',
-          transition: 'all 1s',
-          padding: '0 5%'
-        }
-      } else {
-        this.showGoBack.style = {
-          position: 'fixed',
-          padding: '0 5%'
-        }
-      }
-    }
+    this.scroll = new BScroll(this.$refs.roll)
+    // window.onscroll = () => {
+    //   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    //   if (scrollTop > 40) {
+    //     this.showGoBack.style = {
+    //       position: 'fixed',
+    //       top: 0,
+    //       color: '#fff',
+    //       height: '36px',
+    //       'line-height': '36px',
+    //       'background-color': '#dd001b',
+    //       transition: 'all 1s',
+    //       padding: '0 5%'
+    //     }
+    //   } else {
+    //     this.showGoBack.style = {
+    //       position: 'fixed',
+    //       padding: '0 5%'
+    //     }
+    //   }
+    // }
   },
   watch: {
 
@@ -101,7 +103,7 @@ export default {
 
 <style scoped lang="scss">
 .myLike-container{
-  padding: 5% 0 0 0;
+  padding: 5%;
   height: 100%;
 }
 </style>
