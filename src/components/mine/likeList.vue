@@ -87,6 +87,7 @@ export default {
             obj.blurPicUrl = res.songs[i].al.picUrl
             songPlayList.push(obj)
           }
+          localStorage.setItem('songPlayList', JSON.stringify(songPlayList))
           this.$store.dispatch('setSongPlayList', songPlayList)
         } else {
           this.$message.error(res.msg)
