@@ -2,17 +2,19 @@
 <template>
   <div class="recommend">
     <goBack :showGoBack='showGoBack'/>
-    <div class="recommend-list">
-      <div class="recommend-list-single" v-for="(item, i) in recommendList" :key="item.id" :data-songId='item.id' :data-index='i' @click="play($event)">
-        <div class="img">
-          <img :src="item.al.picUrl" alt="" width="50" height="50">
+    <div class="xzw" style="height: 100%; overflow: hidden" ref="roll">
+      <div class="recommend-list">
+        <div class="recommend-list-single" v-for="(item, i) in recommendList" :key="item.id" :data-songId='item.id' :data-index='i' @click="play($event)">
+          <div class="img">
+            <img :src="item.al.picUrl" alt="" width="50" height="50">
+          </div>
+          <div class="song-detail">
+            <div class="name">{{item.name}}</div>
+            <div class="singer" v-if="item.ar.length === 1">{{item.ar[0].name}} - {{ item.al.name}}</div>
+            <div class="singer" v-else><span v-for="singer in item.ar" :key="singer.id">{{singer.name}} </span> - {{ item.al.name}}</div>
+          </div>
+          <div class="play"><i class="fa fa-play-circle-o"></i></div>
         </div>
-        <div class="song-detail">
-          <div class="name">{{item.name}}</div>
-          <div class="singer" v-if="item.ar.length === 1">{{item.ar[0].name}} - {{ item.al.name}}</div>
-          <div class="singer" v-else><span v-for="singer in item.ar" :key="singer.id">{{singer.name}} </span> - {{ item.al.name}}</div>
-        </div>
-        <div class="play"><i class="fa fa-play-circle-o"></i></div>
       </div>
     </div>
   </div>
@@ -20,6 +22,7 @@
 
 <script>
 import goBack from '@components/public/goBack'
+import BScroll from 'better-scroll'
 export default {
   props: {
 
@@ -70,7 +73,7 @@ export default {
     })
   },
   mounted () {
-
+    this.scroll = new BScroll(this.$refs.roll)
   },
   watch: {
 
@@ -108,6 +111,7 @@ export default {
 
 <style scoped lang="scss">
 .recommend{
+  height: 100%;
   padding: 5%;
 }
 </style>
