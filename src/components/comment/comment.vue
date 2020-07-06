@@ -1,24 +1,27 @@
 // 评论
 <template>
   <transition name="slide-down">
-    <div class="comment-container" v-show="showCommentPanel.show">
+    <div class="comment-container" v-show="showCommentPanel.show" ref="comment">
       <div class="title"><p>评论（{{showCommentPanel.total}}）</p> <span @click="showCommentPanel.show = false"><i class="fa fa-angle-down"></i></span></div>
       <p style="font-weight:bold;margin:20px 0 10px 0">评论区</p>
-      <div class="roll" ref="roll">
-        <div class="comment-panel" v-for="comment in showCommentPanel.comments" :key="comment.time">
-          <div class="avatar"><img :src="comment.user.avatarUrl" alt="" width="40"></div>
-          <div class="content">
-          <div class="content-top">
-            <div class="userInfo">
-              <div class="name">{{comment.user.nickname}} <span v-if="comment.user.vipType !== 0">VIP</span></div>
-              <div class="like">{{comment.likedCount}}
-                <i class="fa fa-thumbs-o-up" v-if="!comment.liked"></i> <!-- 没赞过 -->
-                <i class="fa fa-thumbs-up" v-else></i> <!-- 赞过 -->
-                </div>
-            </div>
-            <div class="time">{{formatTime(comment.time)}}</div>
-            </div>
+
+      <div class="xzw" style="height: 100%; overflow: hidden" ref="roll">
+        <div class="roll">
+          <div class="comment-panel" v-for="comment in showCommentPanel.comments" :key="comment.time">
+            <div class="avatar"><img :src="comment.user.avatarUrl" alt="" width="40"></div>
+            <div class="content">
+              <div class="content-top">
+                <div class="userInfo">
+                  <div class="name">{{comment.user.nickname}} <span v-if="comment.user.vipType !== 0">VIP</span></div>
+                    <div class="like">{{comment.likedCount}}
+                      <i class="fa fa-thumbs-o-up" v-if="!comment.liked"></i> <!-- 没赞过 -->
+                      <i class="fa fa-thumbs-up" v-else></i> <!-- 赞过 -->
+                      </div>
+                    </div>
+                  <div class="time">{{formatTime(comment.time)}}</div>
+              </div>
               <p class="comment-words">{{comment.content}}</p>
+            </div>
           </div>
         </div>
       </div>
