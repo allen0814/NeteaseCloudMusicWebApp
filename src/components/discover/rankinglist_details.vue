@@ -2,8 +2,7 @@
 <template>
   <div class="rankinglist-detail">
     <goBack :showGoBack='showGoBack'/>
-    <!-- <div style="height: 36px"></div> -->
-    <div class="xzw" style="height: 100%; overflow: hidden" ref="roll">
+    <div class="xzw" style="height: calc(95% - 36px); overflow: hidden" ref="roll">
       <songList :songListData='$store.state.songPlayList'/>
     </div>
   </div>
@@ -129,7 +128,7 @@ export default {
 
 <style scoped lang="scss">
 .rankinglist-detail{
-  padding: 5% 0 0 0;
+  padding: 5%;
   height: 100%;
 }
 .describe{

@@ -5,7 +5,7 @@
       <div class="title"><p>评论（{{showCommentPanel.total}}）</p> <span @click="showCommentPanel.show = false"><i class="fa fa-angle-down"></i></span></div>
       <p style="font-weight:bold;margin:20px 0 10px 0">评论区</p>
 
-      <div class="xzw" style="height: 100%; overflow: hidden" ref="roll">
+      <div class="xzw" style="height: calc(95% - 36px); overflow: hidden" ref="roll">
         <div class="roll">
           <div class="comment-panel" v-for="comment in showCommentPanel.comments" :key="comment.time">
             <div class="avatar"><img :src="comment.user.avatarUrl" alt="" width="40"></div>

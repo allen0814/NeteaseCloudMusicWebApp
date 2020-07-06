@@ -2,7 +2,7 @@
 <template>
   <div class="myLike-container">
     <goBack :showGoBack='showGoBack'/>
-    <div class="xzw" style="height: 100%; overflow: hidden" ref="roll">
+    <div class="xzw" style="height: calc(95% - 36px); overflow: hidden" ref="roll">
       <songList :songListData='$store.state.songPlayList'/>
     </div>
   </div>
