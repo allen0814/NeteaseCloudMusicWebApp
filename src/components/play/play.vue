@@ -46,12 +46,14 @@
 
     <!-- autio标签 -->
     <audio @timeupdate="updateTime" @canplay="getDuration" @ended="ended" :src="musicUrl" id="audio" ref="audio"></audio>
+    <comment :showCommentPanel='showCommentPanel'/>
   </div>
 </div>
 </template>
 
 <script>
 import goBack from '@components/public/goBack'
+import comment from '@/components/comment/comment'
 export default {
   props: {
 
@@ -63,6 +65,9 @@ export default {
         show: 1,
         path: '',
         style: { padding: '5% 0 0 5%', color: '#fff' }
+      },
+      showCommentPanel: {
+        show: false
       },
       playingSong: {}, // 正在播放的歌曲信息
       show: true, // 控制cd和lyrics的显示 默认显示cd
@@ -127,11 +132,21 @@ export default {
     getLikeStatus () { // 获取当前歌曲的喜欢状态
       this.likeList.indexOf(this.playingSong.id) !== -1 ? this.like = true : this.like = false
     },
+    getMusicComment (limit = 20) {
+      this.$axios.get(`/comment/music?id=${this.playingSong.id}&limit=${limit}`).then(res => {
+        if (res.code === 200) {
+          this.showCommentPanel.total = res.total
+          this.showCommentPanel.comments = res.hotComments.concat(res.comments)
+          // this.showCommentPanel.comments.push()
+        }
+      })
+    },
     loadMusic () { // 加载歌曲 - 名称 图片 播放地址
       this.showGoBack.title = `${this.playingSong.songName} - ${this.playingSong.singerName}`
       this.getMusicUrl()
       this.getLyrics()
       this.getLikeStatus()
+      this.getMusicComment()
     },
     playSong () { // 手动点击播放歌曲
       const audio = this.$refs.audio
@@ -265,11 +280,12 @@ export default {
       }
     },
     showComment () { // 显示评论组件
-
+      this.showCommentPanel.show = !this.showCommentPanel.show
     }
   },
   components: {
-    goBack
+    goBack,
+    comment
   },
   beforeRouteEnter (to, from, next) {
     document.body.scrollTop = 0
