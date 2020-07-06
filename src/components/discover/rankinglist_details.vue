@@ -33,27 +33,11 @@ export default {
     this.getPlayList()
   },
   mounted () {
-    // window.onscroll = () => {
-    //   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-    //   if (scrollTop > 40) {
-    //     this.showGoBack.style = {
-    //       position: 'fixed',
-    //       top: 0,
-    //       color: '#fff',
-    //       height: '36px',
-    //       'line-height': '36px',
-    //       'background-color': '#dd001b',
-    //       transition: 'all 1s',
-    //       padding: '0 5%'
-    //     }
-    //   } else {
-    //     this.showGoBack.style = {
-    //       position: 'fixed',
-    //       padding: '0 5%'
-    //     }
-    //   }
-    // }
-    this.scroll = new BScroll(this.$refs.roll)
+    const options = {
+      click: true,
+      taps: true
+    }
+    this.scroll = new BScroll(this.$refs.roll, options)
   },
   watch: {
 

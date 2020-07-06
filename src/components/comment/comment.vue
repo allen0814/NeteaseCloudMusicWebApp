@@ -45,13 +45,13 @@ export default {
 
   },
   created () {
-    // this.$axios.get('/comment/music?id=1351219081&limit=1').then(res => {
-    //   this.total = res.total
-    //   this.comments = res.hotComments
-    // })
   },
   mounted () {
-    this.scroll = new BScroll(this.$refs.roll)
+    const options = {
+      click: true,
+      taps: true
+    }
+    this.scroll = new BScroll(this.$refs.roll, options)
   },
   watch: {
 

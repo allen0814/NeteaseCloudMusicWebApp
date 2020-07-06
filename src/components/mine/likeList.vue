@@ -34,7 +34,11 @@ export default {
     this.setSongPlayList()
   },
   mounted () {
-    this.scroll = new BScroll(this.$refs.roll)
+    const options = {
+      click: true,
+      taps: true
+    }
+    this.scroll = new BScroll(this.$refs.roll, options)
     // window.onscroll = () => {
     //   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
     //   if (scrollTop > 40) {

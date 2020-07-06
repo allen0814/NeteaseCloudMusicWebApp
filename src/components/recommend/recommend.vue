@@ -73,7 +73,11 @@ export default {
     })
   },
   mounted () {
-    this.scroll = new BScroll(this.$refs.roll)
+    const options = {
+      click: true,
+      taps: true
+    }
+    this.scroll = new BScroll(this.$refs.roll, options)
   },
   watch: {
 
