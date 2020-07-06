@@ -8,6 +8,9 @@
 export default {
   created () {
     this.getLikeList()
+    if (!localStorage.uid) {
+      this.$router.push('login')
+    }
   },
   mounted () {
   },
