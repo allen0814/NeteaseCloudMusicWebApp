@@ -5,7 +5,7 @@
         <div class="icon-like"><i class="fa fa-heart fa-2x"></i></div>
         <div class="like">我喜欢的音乐</div>
       </div>
-      <div class="fmMusic">
+      <div class="fmMusic" @click="$router.push('/mine/personal_fm')">
         <div class="icon-fm"><i class="fa fa-chrome fa-2x"></i></div>
         <div class="fm">私人FM</div>
       </div>

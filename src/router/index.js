@@ -76,9 +76,9 @@ const routes = [
     component: () => import('@components/mine/likeList.vue')
   },
   {
-    path: '/comment', // 播放页面
-    name: 'comment',
-    component: () => import('@components/comment/comment.vue')
+    path: '/mine/personal_fm', // 我的 - 私人FM
+    name: 'personal_fm',
+    component: () => import('@components/mine/personal_fm.vue')
   }
 ]
 
