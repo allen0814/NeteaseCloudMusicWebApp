@@ -3,7 +3,15 @@
     @touchstart='touchstart'
     @touchmove='touchmove'>
     <div class="main-container">
-      用户信息
+      <div class="userInfo">
+        <img :src="userInfo.backgroundUrl" alt="backgroundUrl" width="100%" class="backgroundImg">
+        <div class="mask"></div>
+        <img :src="userInfo.avatarUrl" alt="avatarUrl" width="70px" class="avatar">
+        <div class="name">{{userInfo.nickname}}</div>
+      </div>
+      <div class="tips">
+        本应用使用的是网抑云官方接口，请各位放心使用。你所有的操作都会同步到Android/IOS app端
+      </div>
       <div class="login-out">
         <button @click="loginOut">退出登录</button>
       </div>
@@ -21,14 +29,15 @@ export default {
       startX: 0,
       startY: 0,
       moveX: 0,
-      moveY: 0
+      moveY: 0,
+      userInfo: {}
     }
   },
   computed: {
 
   },
   created () {
-
+    this.userInfo = JSON.parse(localStorage.userInfo)
   },
   mounted () {
 
@@ -99,5 +108,32 @@ export default {
   width: 80%;
   height: 100%;
   background-color: #f9f9f9;
+}
+.userInfo{
+  width: 100%;
+  position: relative;
+  .backgroundImg{
+    width: 100%;
+  }
+  .mask{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .3);
+  }
+  .avatar{
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    border-radius: 50%;
+  }
+  .name{
+    position: absolute;
+    top: 58px;
+    left: 110px;
+    color: #fff;
+  }
 }
 </style>
