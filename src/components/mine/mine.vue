@@ -40,6 +40,10 @@ export default {
   },
   components: {
 
+  },
+  beforeRouteLeave (to, from, next) {
+    localStorage.setItem('routeBeforePlay', JSON.stringify(from.path))
+    next()
   }
 }
 </script>

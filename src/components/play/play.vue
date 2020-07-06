@@ -106,12 +106,16 @@ export default {
       // 请求歌词
       this.$axios.get(`/lyric?id=${this.playingSong.id}`).then(res => {
         if (res.code === 200) {
-          const lyrics = {}
-          lyrics.lyric = res.lrc.lyric
-          lyrics.tlyric = res.tlyric.lyric
-          this.lyrics = lyrics
-          // 解析歌词
-          this.analysisLyrics(this.lyrics)
+          if (res.nolyric) { // 当前歌曲没有歌词
+            this.lyricsObjArr = ['[00:00] 当前歌曲没有歌词哦！']
+          } else {
+            const lyrics = {}
+            lyrics.lyric = res.lrc.lyric
+            lyrics.tlyric = res.tlyric.lyric
+            this.lyrics = lyrics
+            // 解析歌词
+            this.analysisLyrics(this.lyrics)
+          }
         }
       })
     },
@@ -207,6 +211,10 @@ export default {
       this.$refs.cd.classList.remove('rotate')
       this.$refs.audio.currentTime = 0
       this.isPlaying = false
+      if (JSON.parse(localStorage.curSongPlayIndex) >= this.$store.state.songPlayList.length - 1) {
+        // 请求有缓存，所以私人FM无法及时更新
+        this.$router.push('/mine/personal_fm')
+      }
       this.nextSong()
       console.log('播放完毕')
     },
