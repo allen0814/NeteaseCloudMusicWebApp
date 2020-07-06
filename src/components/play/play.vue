@@ -211,7 +211,7 @@ export default {
       this.$refs.cd.classList.remove('rotate')
       this.$refs.audio.currentTime = 0
       this.isPlaying = false
-      if (JSON.parse(localStorage.curSongPlayIndex) >= this.$store.state.songPlayList.length - 1) {
+      if ((JSON.parse(localStorage.curSongPlayIndex) >= this.$store.state.songPlayList.length - 1) || this.$route.query.from === 'fm') {
         // 请求有缓存，所以私人FM无法及时更新
         this.$router.push('/mine/personal_fm')
         return
