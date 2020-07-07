@@ -32,7 +32,7 @@ export function tryHideFullScreenLoading () {
   }
 }
 
-axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? '//www.xzw999.com:9527' : '//localhost:3000'
+axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? '//www.xzw999.com/music' : '//localhost:3000'
 
 axios.defaults.withCredentials = true
 

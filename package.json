@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "start": "npm run serve",
     "build": "vue-cli-service build",
+    "online": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
