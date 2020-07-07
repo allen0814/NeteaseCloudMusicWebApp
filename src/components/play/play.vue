@@ -10,8 +10,9 @@
     </div>
     <div class="lyrics" v-show="!show" @click="show = !show">
       <div class="volume">
-        <i class="fa fa-volume-up"></i>
-        <div class="volumeRange"><input type="range" min="0" max="100" value="100" step="1"></div>
+        <i class="fa fa-volume-up" v-show="!isMuted" @click.stop.prevent="muted(true)"></i>
+        <i class="fa fa-volume-off" v-show="isMuted" @click.stop.prevent="muted(false)"></i>
+        <div class="volumeRange"><input type="range" min="0" max="100" v-model="volume" step="1" @input="handleVolumeChange"></div>
       </div>
       <div class="lyrics-container">
         <ul ref="lyricUL">
@@ -83,7 +84,9 @@ export default {
       lyricsObjArr: [], // 处理之后的歌词 包含时间和歌词
       curMsTime: '', // 当前音频播放的时分毫秒
       like: false, // 是否喜欢当前歌曲 默认为不喜欢
-      lyricIndex: '0' // 当前显示的歌词
+      lyricIndex: '0', // 当前显示的歌词
+      isMuted: false, // 是否经验 默认不静音
+      volume: 100 // 音频音量
     }
   },
   computed: {
@@ -332,6 +335,21 @@ export default {
       a.href = this.musicUrl
       a.download = `${this.playingSong.songName} - ${this.playingSong.singerName}`
       a.click()
+    },
+    muted (status) { // true 表示要调至静音 false 表示要调至最大声
+      if (status) {
+        this.isMuted = !this.isMuted
+        this.$refs.audio.muted = !this.$refs.audio.muted
+        this.volume = 0
+      } else {
+        this.isMuted = !this.isMuted
+        this.$refs.audio.muted = !this.$refs.audio.muted
+        this.volume = 100
+      }
+    },
+    handleVolumeChange () {
+      this.$refs.audio.volume = this.volume / 100
+      this.volume / 100 === 0 ? this.isMuted = true : this.isMuted = false
     }
   },
   components: {
