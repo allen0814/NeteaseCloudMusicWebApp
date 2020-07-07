@@ -210,12 +210,13 @@ export default {
     margin-bottom: 15px;
     .content{
       width: 60%;
+      div:nth-child(1) img{
+        width: 20px;
+        max-height: 14px;
+      }
     }
     .name{
       font-weight: 700;
-      img{
-        max-height: 14px;
-      }
     }
     .des{
       margin-top: 10px;
