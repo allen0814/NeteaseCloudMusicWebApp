@@ -14,8 +14,8 @@
         <div class="volumeRange"><input type="range" min="0" max="100" value="100" step="1"></div>
       </div>
       <div class="lyrics-container">
-        <ul>
-          <li v-for="item in lyricsObjArr" :key="item.uid">{{item.lyric}}</li>
+        <ul ref="lyricUL">
+          <li v-for="(item, i) in lyricsObjArr" :style="{color: lyricIndex === i ? 'skyblue' : '#ded9d9'}" :key="item.uid" :data-index='i' ref="lyric">{{item.lyric}}</li>
         </ul>
       </div>
     </div>
@@ -82,7 +82,8 @@ export default {
       lyrics: {}, // 歌词 中英文
       lyricsObjArr: [], // 处理之后的歌词 包含时间和歌词
       curMsTime: '', // 当前音频播放的时分毫秒
-      like: false // 是否喜欢当前歌曲 默认为不喜欢
+      like: false, // 是否喜欢当前歌曲 默认为不喜欢
+      lyricIndex: '0' // 当前显示的歌词
     }
   },
   computed: {
@@ -107,7 +108,7 @@ export default {
       this.$axios.get(`/lyric?id=${this.playingSong.id}`).then(res => {
         if (res.code === 200) {
           if (res.nolyric) { // 当前歌曲没有歌词
-            this.lyricsObjArr = ['[00:00] 当前歌曲没有歌词哦！']
+            this.lyricsObjArr = ['[00:00.00] 当前歌曲没有歌词哦！']
           } else {
             const lyrics = {}
             lyrics.lyric = res.lrc.lyric
@@ -166,6 +167,7 @@ export default {
       this.$refs.cd.classList.add('rotate')
       if (this.$refs.cd.classList.contains('rotatePause')) this.$refs.cd.classList.remove('rotatePause')
       this.getLikeStatus()
+      this.$refs.lyricUL.style.transform = 'translateY(0px)'
     },
     nextSong () { // 播放下一首歌曲
       localStorage.curSongPlayIndex++
@@ -173,6 +175,7 @@ export default {
       this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
       this.loadMusic()
       this.autoPlaySong()
+      this.$refs.lyricUL.style.transform = 'translateY(0px)'
     },
     prevSong () { // 播放上一首歌曲
       localStorage.curSongPlayIndex--
@@ -180,6 +183,7 @@ export default {
       this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
       this.loadMusic()
       this.autoPlaySong()
+      this.$refs.lyricUL.style.transform = 'translateY(0px)'
     },
     pauseSong () { // 暂停歌曲
       this.isPlaying = !this.isPlaying
@@ -196,6 +200,18 @@ export default {
       this.curTime = this.formatTime(currentTime)
       this.curMsTime = (this.formatTime(currentTime, true))
       this.updateProgress(currentTime, this.duration)
+
+      // 匹配歌词
+      for (let i = 0; i < this.lyricsObjArr.length; i++) {
+        if (this.currentTime > (parseInt(this.lyricsObjArr[i].time))) {
+          const index = this.$refs.lyric[i].dataset.index
+          if (i === parseInt(index)) {
+            this.lyricIndex = i
+            // this.$refs.lyric[i].style.color = 'skyblue'
+            this.$refs.lyricUL.style.transform = `translateY(${170 - (30 * (i + 1))}px)`
+          }
+        }
+      }
     },
     formatTime (time, toMS = false) {
       if (time === 0) {
@@ -212,7 +228,6 @@ export default {
       this.$refs.audio.currentTime = 0
       this.isPlaying = false
       if ((JSON.parse(localStorage.curSongPlayIndex) >= this.$store.state.songPlayList.length - 1) || this.$route.query.from === 'fm') {
-        // 请求有缓存，所以私人FM无法及时更新
         this.$router.push('/mine/personal_fm')
         return
       }
@@ -251,21 +266,42 @@ export default {
     analysisLyrics (lyrics) { // 解析歌词
       const olyrics = lyrics.lyric
       this.lyricsObjArr = this.lyric2ObjArr(olyrics)
+      // console.log(this.lyricsObjArr)
     },
     lyric2ObjArr (lyric) {
       const regNewLine = /\n/
-      const regTime = /\[.*\]/
+      // const regTime = /\[.*\]/
+      const regTime = /\[\d{2}:\d{2}.\d{2,3}\]/
       const lineArr = lyric.split(regNewLine) // 每行歌词的数组
-      const lyricObjArr = [] // 歌词对象数组 [{time: '', lyric: ''}]
+      const lyricsObjArr = [] // 歌词对象数组 [{time: '', lyric: ''}]
       lineArr.forEach(item => {
         if (item === '') return
         const obj = {}
-        obj.time = item.match(regTime)[0].slice(1, item.match(regTime)[0].length - 1)
-        obj.lyric = item.split(']')[1].trim()
+        const time = item.match(regTime)
+
+        obj.lyric = item.split(']')[1].trim() === '' ? '' : item.split(']')[1].trim()
+        obj.time = time ? this.formatLyricTime(time[0].slice(1, time[0].length - 1)) : 0
         obj.uid = Math.random().toString().slice(-6)
-        lyricObjArr.push(obj)
+        if (obj.lyric === '') {
+          console.log('这一行没有歌词')
+        } else {
+          lyricsObjArr.push(obj)
+        }
       })
-      return lyricObjArr
+      return lyricsObjArr
+    },
+    formatLyricTime (time) { // 格式化歌词的时间 转换成 sss:ms
+      const regMin = /.*:/
+      const regSec = /:.*\./
+      const regMs = /\./
+
+      const min = parseInt(time.match(regMin)[0].slice(0, 2))
+      let sec = parseInt(time.match(regSec)[0].slice(1, 3))
+      const ms = time.slice(time.match(regMs).index + 1, time.match(regMs).index + 3)
+      if (min !== 0) {
+        sec += min * 60
+      }
+      return Number(sec + '.' + ms)
     },
     toggleLikeMusic (like = true) { // like为true表示默认点击喜欢音乐 传入false表示取消喜欢
       like ? this.like = true : this.like = false
