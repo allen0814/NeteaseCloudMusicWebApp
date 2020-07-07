@@ -84,6 +84,7 @@ const routes = [
 
 const router = new VueRouter({
   routes,
+  base: '/music/',
   linkExactActiveClass: 'nav-active'
 })
 
