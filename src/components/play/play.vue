@@ -155,6 +155,7 @@ export default {
       this.getLyrics()
       this.getLikeStatus()
       this.getMusicComment()
+      this.showCommentPanel.show = false
     },
     playSong () { // 手动点击播放歌曲
       const audio = this.$refs.audio
