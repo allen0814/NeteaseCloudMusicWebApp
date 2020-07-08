@@ -65,7 +65,7 @@ export default {
         title: '',
         show: 1,
         path: '',
-        style: { padding: '5% 0 0 5%', color: '#fff' }
+        style: { padding: '5% 0 0 5%', color: '#fff', 'box-sizing': 'border-box' }
       },
       showCommentPanel: {
         show: false
@@ -201,7 +201,7 @@ export default {
       const { currentTime } = e.target
       this.currentTime = currentTime
       this.curTime = this.formatTime(currentTime)
-      this.curMsTime = (this.formatTime(currentTime, true))
+      // this.curMsTime = (this.formatTime(currentTime, true))
       this.updateProgress(currentTime, this.duration)
 
       // 匹配歌词
@@ -210,21 +210,19 @@ export default {
           const index = this.$refs.lyric[i].dataset.index
           if (i === parseInt(index)) {
             this.lyricIndex = i
-            // this.$refs.lyric[i].style.color = 'skyblue'
             this.$refs.lyricUL.style.transform = `translateY(${170 - (30 * (i + 1))}px)`
           }
         }
       }
     },
-    formatTime (time, toMS = false) {
+    formatTime (time) {
       if (time === 0) {
         this.curTime = '00:00'
         return
       }
       const mins = Math.floor(time / 60) < 10 ? `0${Math.floor(time / 60)}` : Math.floor(time / 60)
       const sec = Math.floor(time % 60) < 10 ? `0${Math.floor(time % 60)}` : Math.floor(time % 60)
-      const ms = time.toString().split('.')[1].slice(0, 2)
-      return !toMS ? `${mins}:${sec}` : `${mins}:${sec}.${ms}`
+      return `${mins}:${sec}`
     },
     ended () {
       this.$refs.cd.classList.remove('rotate')
@@ -269,11 +267,9 @@ export default {
     analysisLyrics (lyrics) { // 解析歌词
       const olyrics = lyrics.lyric
       this.lyricsObjArr = this.lyric2ObjArr(olyrics)
-      // console.log(this.lyricsObjArr)
     },
     lyric2ObjArr (lyric) {
       const regNewLine = /\n/
-      // const regTime = /\[.*\]/
       const regTime = /\[\d{2}:\d{2}.\d{2,3}\]/
       const lineArr = lyric.split(regNewLine) // 每行歌词的数组
       const lyricsObjArr = [] // 歌词对象数组 [{time: '', lyric: ''}]
