@@ -7,7 +7,7 @@ function resolve (dir) {
 }
 
 module.exports = {
-  publicPath: '/music/',
+  publicPath: './',
   filenameHashing: true, // 文件使用hash值命名
   outputDir: process.env.outputDir,
   productionSourceMap: false, // 取消生成map文件
