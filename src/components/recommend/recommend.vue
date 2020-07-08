@@ -2,7 +2,7 @@
 <template>
   <div class="recommend">
     <goBack :showGoBack='showGoBack'/>
-    <div class="xzw" style="height: calc(95% - 36px); overflow: hidden" ref="roll">
+    <div class="xzw" style="height: calc(100% - 36px); overflow: hidden" ref="roll">
       <div class="recommend-list">
         <div class="recommend-list-single" v-for="(item, i) in recommendList" :key="item.id" :data-songId='item.id' :data-index='i' @click="play($event)">
           <div class="img">
@@ -118,5 +118,6 @@ export default {
 .recommend{
   height: 100%;
   padding: 5%;
+  box-sizing: border-box;
 }
 </style>

@@ -2,7 +2,7 @@
 <template>
   <div class="myLike-container">
     <goBack :showGoBack='showGoBack'/>
-    <div class="xzw" style="height: calc(95% - 36px); overflow: hidden" ref="roll">
+    <div class="xzw" style="height: calc(100% - 36px); overflow: hidden" ref="roll">
       <songList :songListData='$store.state.songPlayList'/>
     </div>
   </div>
@@ -110,5 +110,6 @@ export default {
 .myLike-container{
   padding: 5%;
   height: 100%;
+  box-sizing: border-box;
 }
 </style>
