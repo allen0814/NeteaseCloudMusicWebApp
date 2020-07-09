@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { Message } from 'element-ui'
 
 /**
  * 重写路由的push方法
@@ -86,6 +87,22 @@ const router = new VueRouter({
   routes,
   base: '/music/',
   linkExactActiveClass: 'nav-active'
+})
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  const isLogin = localStorage.uid
+  if (to.path === '/login') {
+    next()
+  } else {
+    // 是否在登录状态下
+    if (isLogin) {
+      next()
+    } else {
+      Message.error('请先登录 谢谢')
+      next('/login')
+    }
+  }
 })
 
 export default router
