@@ -11,13 +11,14 @@ import http from '@/config/http'
 
 import './assets/style.scss'
 
+Message({ duration: 1500 })
+
 Vue.config.productionTip = false
 Vue.use(Button)
 Vue.use(Message)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
-Message({ duration: 1500 })
 Vue.prototype.$axios = http
 Vue.prototype.$message = Message
 
