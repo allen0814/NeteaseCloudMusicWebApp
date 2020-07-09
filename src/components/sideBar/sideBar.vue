@@ -62,6 +62,7 @@ export default {
         if (res.code === 200) {
           localStorage.removeItem('uid')
           localStorage.removeItem('NetEaseCookie')
+          localStorage.removeItem('userInfo')
           this.$message.success('已退出')
           this.hideSideBar()
         }
