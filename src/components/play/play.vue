@@ -110,8 +110,11 @@ export default {
       // 请求歌词
       this.$axios.get(`/lyric?id=${this.playingSong.id}`).then(res => {
         if (res.code === 200) {
-          if (res.nolyric) { // 当前歌曲没有歌词
-            this.lyricsObjArr = ['[00:00.00] 当前歌曲没有歌词哦！']
+          if (res.needDesc) { // 当前歌曲没有歌词
+            this.lyricsObjArr = [
+              { time: 0, lyric: '纯音乐，请欣赏！', uid: 666666 },
+              { time: 0, lyric: '我好喜欢你！！！', uid: 520520 }
+            ]
           } else {
             const lyrics = {}
             lyrics.lyric = res.lrc.lyric
