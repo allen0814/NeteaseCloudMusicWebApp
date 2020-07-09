@@ -17,6 +17,7 @@ Vue.use(Message)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
+Message({ duration: 1500 })
 Vue.prototype.$axios = http
 Vue.prototype.$message = Message
 
