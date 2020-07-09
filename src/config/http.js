@@ -59,7 +59,7 @@ axios.interceptors.response.use(res => {
   switch (err.response.status) {
     case 301:
       tryHideFullScreenLoading()
-      Message.error('请先登录')
+      Message.error('该功能需要登录才能使用！')
       router.push('/login')
       break
     case 404:
