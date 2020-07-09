@@ -12,6 +12,7 @@
       <el-button class="btn-primary" @click="login">登陆</el-button>
     </el-form>
     <p>没有网易云账号？<router-link to="/register">注册一个</router-link></p>
+    <p style="font-size: 13px; color: red">!调用的是官方接口，请放心使用网易云账号登录!</p>
   </div>
 </template>
 

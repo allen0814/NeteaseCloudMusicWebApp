@@ -18,6 +18,7 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
 Vue.prototype.$axios = http
+Vue.prototype.$message = Message
 
 console.log(`现在处于 ${process.env.NODE_ENV} 环境`)
 
