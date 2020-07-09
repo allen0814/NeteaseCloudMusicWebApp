@@ -23,6 +23,7 @@
               <p class="comment-words">{{comment.content}}</p>
             </div>
           </div>
+          <div class="tip" style="text-align:center;margin-top:20px">{{tipText}}</div>
         </div>
       </div>
     </div>
@@ -38,7 +39,10 @@ export default {
   data () {
     return {
       total: 0,
-      comments: []
+      comments: [],
+      tipText: '上拉加载更多...',
+      currentPage: 1, // 当前页数
+      pageSize: 20 // 当前页评论数量
     }
   },
   computed: {
@@ -47,11 +51,9 @@ export default {
   created () {
   },
   mounted () {
-    const options = {
-      click: true,
-      taps: true
-    }
-    this.scroll = new BScroll(this.$refs.roll, options)
+    setTimeout(() => {
+      this.initScroll()
+    }, 20)
   },
   watch: {
 
@@ -62,10 +64,34 @@ export default {
       var YY = date.getFullYear() + '年'
       var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月'
       var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + '日'
-      // var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
-      // var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
-      // var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
       return YY + MM + DD
+    },
+    initScroll () {
+      const options = {
+        click: true,
+        taps: true,
+        startY: 0,
+        pullUpLoad: {
+          threshold: -70 // 上拉超过底部70px触发加载
+        }
+      }
+      this.$nextTick(() => {
+        this.scroll = new BScroll(this.$refs.roll, options)
+
+        this.scroll.on('pullingUp', () => {
+          this.tipText = '松手嘛你！紧到拉到咋子！'
+          this.currentPage++
+          this.$emit('getMoreComment', this.currentPage, this.pageSize)
+          this.scroll.refresh()
+          setTimeout(() => {
+            this.scroll.finishPullUp()
+          }, 2000)
+        })
+
+        this.scroll.on('scrollEnd', () => {
+          this.tipText = '上拉加载更多...'
+        })
+      })
     }
   },
   components: {

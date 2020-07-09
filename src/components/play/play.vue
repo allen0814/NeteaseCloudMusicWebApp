@@ -47,7 +47,7 @@
 
     <!-- autio标签 -->
     <audio @timeupdate="updateTime" @canplay="getDuration" @ended="ended" :src="musicUrl" id="audio" ref="audio"></audio>
-    <comment :showCommentPanel='showCommentPanel'/>
+    <comment :showCommentPanel='showCommentPanel' @getMoreComment='getMoreComment'/>
   </div>
 </div>
 </template>
@@ -143,12 +143,22 @@ export default {
     getLikeStatus () { // 获取当前歌曲的喜欢状态
       this.likeList.indexOf(this.playingSong.id) !== -1 ? this.like = true : this.like = false
     },
-    getMusicComment (limit = 20) {
-      this.$axios.get(`/comment/music?id=${this.playingSong.id}&limit=${limit}`).then(res => {
+    getMusicComment (currentPage, limit = 20) {
+      let offset
+      let url
+      if (currentPage > 1) {
+        offset = (currentPage - 1) * 20
+        url = `/comment/music?id=${this.playingSong.id}&limit=${limit}&offset=${offset}`
+      } else {
+        url = `/comment/music?id=${this.playingSong.id}&limit=${limit}`
+      }
+      this.$axios.get(url).then(res => {
         if (res.code === 200) {
           this.showCommentPanel.total = res.total
-          this.showCommentPanel.comments = res.hotComments.concat(res.comments)
-          // this.showCommentPanel.comments.push()
+          this.showCommentPanel.comments = res.hotComments
+            ? res.hotComments.concat(res.comments)
+            : this.showCommentPanel.comments.concat(res.comments)
+          console.log(this.showCommentPanel.comments)
         }
       })
     },
@@ -350,6 +360,11 @@ export default {
     handleVolumeChange () {
       this.$refs.audio.volume = this.volume / 100
       this.volume / 100 === 0 ? this.isMuted = true : this.isMuted = false
+    },
+    getMoreComment (currentPage, pageSize) { // 获取更多评论
+      // currentPage++
+      console.log(`当前页数：${currentPage}`)
+      this.getMusicComment(currentPage, pageSize)
     }
   },
   components: {
