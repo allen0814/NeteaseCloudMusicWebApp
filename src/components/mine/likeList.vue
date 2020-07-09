@@ -22,16 +22,16 @@ export default {
         show: 1,
         path: '/mine',
         title: '我喜欢的音乐'
-      }
+      },
+      likeList: []
     }
   },
   computed: {
-    likeList () {
-      return this.$store.state.likeList
-    }
   },
   created () {
-    this.setSongPlayList()
+    if (localStorage.uid) {
+      this.getLikeList()
+    }
   },
   mounted () {
     const options = {
@@ -39,31 +39,19 @@ export default {
       taps: true
     }
     this.scroll = new BScroll(this.$refs.roll, options)
-    // window.onscroll = () => {
-    //   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-    //   if (scrollTop > 40) {
-    //     this.showGoBack.style = {
-    //       position: 'fixed',
-    //       top: 0,
-    //       color: '#fff',
-    //       height: '36px',
-    //       'line-height': '36px',
-    //       'background-color': '#dd001b',
-    //       transition: 'all 1s',
-    //       padding: '0 5%'
-    //     }
-    //   } else {
-    //     this.showGoBack.style = {
-    //       position: 'fixed',
-    //       padding: '0 5%'
-    //     }
-    //   }
-    // }
   },
   watch: {
 
   },
   methods: {
+    getLikeList () {
+      this.$axios.get(`/likelist?uid=${JSON.parse(localStorage.uid)}`).then(res => {
+        if (res.code === 200) {
+          this.likeList = res.ids
+          this.setSongPlayList()
+        }
+      })
+    },
     setSongPlayList () {
       const songListId = []
       const songPlayList = [] // 当前播放歌曲列表  存到vuex
