@@ -96,8 +96,9 @@ export default {
       this.$axios.get(`/playlist/detail?id=${id}`).then(res => {
         if (res.code === 200) {
           const ids = []
-          res.privileges.forEach(item => ids.push(item.id))
+          res.playlist.trackIds.forEach(item => ids.push(item.id))
           this.$store.dispatch('setSheetListId', ids)
+          this.$router.push('/mine/songSheet')
         }
       })
     }
