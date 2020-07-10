@@ -74,11 +74,7 @@ export default {
     })
   },
   mounted () {
-    const options = {
-      click: true,
-      taps: true
-    }
-    this.scroll = new BScroll(this.$refs.roll, options)
+    this.initScroll()
   },
   watch: {
 
@@ -102,6 +98,18 @@ export default {
       } else {
         this.$message.error(`${useable.message}`)
       }
+    },
+    initScroll () {
+      const options = {
+        click: true,
+        taps: true
+      }
+      this.$nextTick(() => {
+        this.scroll = new BScroll(this.$refs.roll, options)
+        setTimeout(() => {
+          this.scroll.refresh()
+        }, 500)
+      })
     }
   },
   components: {
