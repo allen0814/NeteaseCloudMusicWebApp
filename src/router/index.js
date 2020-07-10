@@ -80,6 +80,11 @@ const routes = [
     path: '/mine/personal_fm', // 我的 - 私人FM
     name: 'personal_fm',
     component: () => import('@components/mine/personal_fm.vue')
+  },
+  {
+    path: '/mine/songSheet', // 我的 - 歌单
+    name: 'songSheet',
+    component: () => import('@components/songSheet/songSheet.vue')
   }
 ]
 
