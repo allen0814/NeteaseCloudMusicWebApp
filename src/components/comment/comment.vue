@@ -69,8 +69,8 @@ export default {
     initScroll () {
       const options = {
         click: true,
-        taps: true,
         startY: 0,
+        probeType: 2,
         pullUpLoad: {
           threshold: -70 // 上拉超过底部70px触发加载
         }
@@ -82,10 +82,10 @@ export default {
           this.tipText = '松手嘛你！紧到拉到咋子！'
           this.currentPage++
           this.$emit('getMoreComment', this.currentPage, this.pageSize)
-          this.scroll.refresh()
+          // this.scroll.refresh()
           setTimeout(() => {
             this.scroll.finishPullUp()
-          }, 2000)
+          }, 500)
         })
 
         this.scroll.on('scrollEnd', () => {
