@@ -375,6 +375,16 @@ export default {
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0
     next()
+  },
+  beforeRouteLeave (to, from, next) {
+    if (this.isPlaying) { // 播放状态 false为暂停 true为播放
+      this.pauseSong()
+      setTimeout(() => {
+        next()
+      }, 20)
+    } else {
+      next()
+    }
   }
 }
 </script>
