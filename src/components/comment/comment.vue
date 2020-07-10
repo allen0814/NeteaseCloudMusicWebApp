@@ -7,13 +7,13 @@
 
       <div class="xzw" style="height: calc(95% - 36px); overflow: hidden" ref="roll">
         <div class="roll">
-          <div class="comment-panel" v-for="comment in showCommentPanel.comments" :key="comment.time">
+          <div class="comment-panel" v-for="(comment, i) in showCommentPanel.comments" :key="comment.time">
             <div class="avatar"><img :src="comment.user.avatarUrl" alt="" width="40"></div>
             <div class="content">
               <div class="content-top">
                 <div class="userInfo">
                   <div class="name">{{comment.user.nickname}} <span v-if="comment.user.vipType !== 0">VIP</span></div>
-                    <div class="like">{{comment.likedCount}}
+                    <div class="like" :data-cid='comment.commentId' :data-index='i' @click="toggleLikeComment($event)">{{comment.likedCount}}
                       <i class="fa fa-thumbs-o-up" v-if="!comment.liked"></i> <!-- 没赞过 -->
                       <i class="fa fa-thumbs-up" v-else></i> <!-- 赞过 -->
                       </div>
@@ -46,7 +46,9 @@ export default {
     }
   },
   computed: {
-
+    playingSong () {
+      return (this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]).id
+    }
   },
   created () {
   },
@@ -92,6 +94,14 @@ export default {
           this.tipText = '上拉加载更多...'
         })
       })
+    },
+    toggleLikeComment (event) {
+      const e = event || window.event
+      const target = e.currentTarget
+      const cid = target.getAttribute('data-cid')
+      const cIndex = target.getAttribute('data-index')
+      const id = this.playingSong
+      this.$emit('likeComment', id, cid, cIndex)
     }
   },
   components: {

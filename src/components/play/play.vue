@@ -47,7 +47,7 @@
 
     <!-- autio标签 -->
     <audio @timeupdate="updateTime" @canplay="getDuration" @ended="ended" :src="musicUrl" id="audio" ref="audio"></audio>
-    <comment :showCommentPanel='showCommentPanel' @getMoreComment='getMoreComment'/>
+    <comment :showCommentPanel='showCommentPanel' @getMoreComment='getMoreComment' @likeComment='toggleLikeComment'/>
   </div>
 </div>
 </template>
@@ -365,6 +365,24 @@ export default {
       // currentPage++
       console.log(`当前页数：${currentPage}`)
       this.getMusicComment(currentPage, pageSize)
+    },
+    toggleLikeComment (id, cid, cIndex) {
+      const status = this.showCommentPanel.comments[cIndex].liked // true -- 表示点赞过。false -- 表示未点赞
+      if (status) {
+        this.$axios.get(`/comment/like?id=${id}&cid=${cid}&t=0&type=0`).then(res => {
+          if (res.code === 200) {
+            this.showCommentPanel.comments[cIndex].liked = !this.showCommentPanel.comments[cIndex].liked
+            this.$message.warning('渣男，你就这样抛弃人家！')
+          }
+        })
+      } else {
+        this.$axios.get(`/comment/like?id=${id}&cid=${cid}&t=1&type=0`).then(res => {
+          if (res.code === 200) {
+            this.showCommentPanel.comments[cIndex].liked = !this.showCommentPanel.comments[cIndex].liked
+            this.$message.success('人家超喜欢你的，说话又好听')
+          }
+        })
+      }
     }
   },
   components: {
