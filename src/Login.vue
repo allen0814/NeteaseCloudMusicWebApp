@@ -4,7 +4,7 @@
     <h1>网易云音乐</h1>
     <el-form :model="loginForm" :rules="rules">
       <el-form-item label="手机号" prop="phone">
-        <el-input v-model="loginForm.phone" type="text"></el-input>
+        <el-input v-model="loginForm.phone" type="text" maxlength="11"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input v-model="loginForm.password" type="password"></el-input>
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { MessageBox } from 'element-ui'
 export default {
   props: {
 
@@ -48,15 +49,33 @@ export default {
 
   },
   created () {
-    // this.$axios.post('/banner', { type: 1 }).then(res => {
-    //   console.log(res)
-    // })
+
   },
   mounted () {
 
   },
   watch: {
-
+    loginForm: {
+      handler (val) {
+        if (val.phone === '17381590487') {
+          MessageBox.confirm('屁寒 我喜欢你🙈 我们可以谈恋爱吗💗💘', '🌸🍓🌈🌼🍉🍔🍕🍖🍟🍦🍩', {
+            showClose: false,
+            showCancelButton: false,
+            closeOnClickModal: false,
+            confirmButtonText: '🉑'
+          }).then(() => {
+            MessageBox.confirm('你喜欢苹果汁、葡萄汁、西瓜汁、还是我这个小逼崽汁😊', '你好 女朋友💏', {
+              showClose: false,
+              showCancelButton: false,
+              closeOnClickModal: false,
+              confirmButtonText: '😋爱你哦😘'
+            })
+          })
+        }
+      },
+      deep: true,
+      immediate: true
+    }
   },
   methods: {
     login () {
