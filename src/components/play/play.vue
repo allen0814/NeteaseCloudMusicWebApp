@@ -86,17 +86,17 @@ export default {
       like: false, // 是否喜欢当前歌曲 默认为不喜欢
       lyricIndex: '0', // 当前显示的歌词
       isMuted: false, // 是否经验 默认不静音
-      volume: 100 // 音频音量
+      volume: 100, // 音频音量
+      likeList: []
     }
   },
   computed: {
-    likeList () {
-      return this.$store.state.likeList
-    }
+
   },
   created () {
     this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
     this.showGoBack.path = JSON.parse(localStorage.routeBeforePlay)
+    this.getLikeList()
     this.loadMusic()
   },
   mounted () {
@@ -383,6 +383,13 @@ export default {
           }
         })
       }
+    },
+    getLikeList () { // 获取喜欢的音乐的ID列表
+      this.$axios.get(`/likelist?uid=${JSON.parse(localStorage.uid)}`).then(res => {
+        if (res.code === 200) {
+          this.likeList = res.ids
+        }
+      })
     }
   },
   components: {
