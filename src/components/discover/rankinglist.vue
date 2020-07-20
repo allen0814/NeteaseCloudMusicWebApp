@@ -21,7 +21,7 @@
     <!-- 其他榜单 -->
     <h2>其他榜单</h2>
     <div class="other">
-      <div class="list-single" v-for="(item) in otherList" :key="item.playCount" :data-name='item.name' @click.stop="toDetails($event)" ref="single">
+      <div class="list-single" v-for="(item) in otherList" :key="item.playCount" :data-name='item.name' :data-listid='item.id' @click.stop="toDetails($event)" ref="single">
         <div class="list-single-left">
           <img :src="item.coverImgUrl" :alt="item.name">
           <span>{{item.updateFrequency}}</span>
