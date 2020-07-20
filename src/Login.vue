@@ -64,7 +64,7 @@ export default {
             closeOnClickModal: false,
             confirmButtonText: '🉑'
           }).then(() => {
-            MessageBox.confirm('你喜欢苹果汁、葡萄汁、西瓜汁、还是我这个小逼崽汁😊', '你好 女朋友💏', {
+            MessageBox.confirm('你喜欢苹果汁、葡萄汁、西瓜汁、还是我这个小逼崽汁😊', '屁寒💏', {
               showClose: false,
               showCancelButton: false,
               closeOnClickModal: false,
