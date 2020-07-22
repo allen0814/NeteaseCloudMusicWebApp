@@ -86,15 +86,10 @@ export default {
       const id = target.getAttribute('data-songId')
       const useable = await this.$axios.get(`/check/music?id=${id}`)
       if (useable.success) {
-        this.$axios.get(`/song/url?id=${id}`).then(res => {
-          if (res.code === 200) {
-            console.log(res.data[0].url)
-            this.$router.push({ path: '/play', query: { id } })
+        this.$router.push({ path: '/play', query: { id } })
 
-            const index = target.getAttribute('data-index')
-            localStorage.setItem('curSongPlayIndex', index)
-          }
-        })
+        const index = target.getAttribute('data-index')
+        localStorage.setItem('curSongPlayIndex', index)
       } else {
         this.$message.error(`${useable.message}`)
       }
