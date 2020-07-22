@@ -76,8 +76,6 @@ export default {
           res.playlist.filter((item) => {
             item.creator.userId === this.userId ? this.myPlaylist.push(item) : this.collectionPlayList.push(item)
           })
-          console.log(this.myPlaylist)
-          console.log(this.collectionPlayList)
         }
       })
     },
