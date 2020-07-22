@@ -83,6 +83,10 @@ export default {
   components: {
     goBack,
     songList
+  },
+  beforeRouteLeave (to, from, next) {
+    localStorage.setItem('routeBeforePlay', JSON.stringify(from.path))
+    next()
   }
 }
 </script>
