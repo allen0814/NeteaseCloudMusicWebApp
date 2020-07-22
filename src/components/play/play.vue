@@ -87,7 +87,8 @@ export default {
       lyricIndex: '0', // 当前显示的歌词
       isMuted: false, // 是否经验 默认不静音
       volume: 100, // 音频音量
-      likeList: []
+      likeList: [],
+      playType: 0 // 播放类型 0代表播放单曲 1代表播放歌曲列表
     }
   },
   computed: {
@@ -95,7 +96,9 @@ export default {
   },
   created () {
     this.playingSong = this.$store.state.songPlayList[JSON.parse(localStorage.curSongPlayIndex)]
-    this.showGoBack.path = JSON.parse(localStorage.routeBeforePlay)
+    this.playType = this.$store.state.songPlayList.length === 1 ? 0 : 1
+    console.log(localStorage.routeBeforePlay)
+    this.showGoBack.path = (localStorage.routeBeforePlay)
     this.getLikeList()
     this.loadMusic()
   },
@@ -214,8 +217,7 @@ export default {
     updateTime (e) { // timeupdate时获取当前播放时间
       const { currentTime } = e.target
       this.currentTime = currentTime
-      this.curTime = this.formatTime(currentTime)
-      // this.curMsTime = (this.formatTime(currentTime, true))
+      this.curTime = this.formatTime(currentTime) === 'undefined' ? '00:00' : this.formatTime(currentTime)
       this.updateProgress(currentTime, this.duration)
 
       // 匹配歌词
@@ -242,6 +244,11 @@ export default {
       this.$refs.cd.classList.remove('rotate')
       this.$refs.audio.currentTime = 0
       this.isPlaying = false
+      if (this.playType === 0) {
+        this.$message.warning('歌曲列表只有这一首 请返回上一级！')
+        this.curTime = '00:00'
+        return
+      }
       if ((JSON.parse(localStorage.curSongPlayIndex) >= this.$store.state.songPlayList.length - 1) || this.$route.query.from === 'fm') {
         this.$router.push('/mine/personal_fm')
         return
@@ -362,8 +369,6 @@ export default {
       this.volume / 100 === 0 ? this.isMuted = true : this.isMuted = false
     },
     getMoreComment (currentPage, pageSize) { // 获取更多评论
-      // currentPage++
-      console.log(`当前页数：${currentPage}`)
       this.getMusicComment(currentPage, pageSize)
     },
     toggleLikeComment (id, cid, cIndex) {

@@ -39,6 +39,10 @@ export default {
   },
   components: {
     banner
+  },
+  beforeRouteLeave (to, from, next) {
+    localStorage.setItem('routeBeforePlay', 'discover')
+    next()
   }
 }
 </script>
