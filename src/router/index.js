@@ -22,7 +22,8 @@ const routes = [
       {
         path: '/mine',
         name: 'mine',
-        component: () => import('@components/mine/mine.vue')
+        component: () => import('@components/mine/mine.vue'),
+        meta: { keepAlive: true }
       },
       {
         path: '/discover',
