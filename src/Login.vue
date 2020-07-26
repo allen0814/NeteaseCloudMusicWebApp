@@ -58,17 +58,17 @@ export default {
     loginForm: {
       handler (val) {
         if (val.phone === '17381590487') {
-          MessageBox.confirm('屁寒 我喜欢你🙈 我们可以谈恋爱吗💗💘', '🌸🍓🌈🌼🍉🍔🍕🍖🍟🍦🍩', {
+          MessageBox.confirm('屁寒 我真的真的真的很喜欢你！🙈 💗💘', '🌸🍓🌈🌼🍉🍔🍕🍖🍟🍦🍩', {
             showClose: false,
             showCancelButton: false,
             closeOnClickModal: false,
             confirmButtonText: '🉑'
           }).then(() => {
-            MessageBox.confirm('你喜欢苹果汁、葡萄汁、西瓜汁、还是我这个小逼崽汁😊', '屁寒💏', {
+            MessageBox.confirm('希望以后的日子我们能携手走过！😘', '💏', {
               showClose: false,
               showCancelButton: false,
               closeOnClickModal: false,
-              confirmButtonText: '😋爱你哦😘'
+              confirmButtonText: '🀄爱你'
             })
           })
         }
