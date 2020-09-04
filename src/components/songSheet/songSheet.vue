@@ -85,7 +85,7 @@ export default {
     songList
   },
   beforeRouteLeave (to, from, next) {
-    localStorage.setItem('routeBeforePlay', JSON.stringify(from.path))
+    localStorage.setItem('routeBeforePlay', (from.path))
     next()
   }
 }

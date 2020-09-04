@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 import { Message } from 'element-ui'
 
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? '//www.xzw999.com/music' : '//localhost:3000'
@@ -29,6 +30,9 @@ axios.interceptors.response.use(res => {
   switch (err.response.status) {
     case 404:
       Message.error(err.response.data.message)
+      break
+    case 301:
+      router.push('/login')
       break
   }
   return Promise.reject(err)
