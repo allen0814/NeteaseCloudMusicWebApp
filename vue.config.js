@@ -11,13 +11,13 @@ const cdn = {
   externals: {
     vue: 'Vue',
     vuex: 'Vuex',
-    'vue-router': 'VueRouter',
+    // 'vue-router': 'VueRouter',
     axios: 'axios',
     'element-ui': 'ElementUI'
   },
   js: [
     'https://cdn.jsdelivr.net/npm/vue', // Vue
-    'https://cdn.jsdelivr.net/npm/vue-router@3.0.3/dist/vue-router.min.js', // vue-router
+    // 'https://cdn.jsdelivr.net/npm/vue-router@3.0.3/dist/vue-router.min.js', // vue-router
     'https://cdn.jsdelivr.net/npm/vuex@3.0.1/dist/vuex.min.js', // Vuex
     'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js', // axios
     'https://cdn.jsdelivr.net/npm/element-ui@2.13.2/lib/index.js' // element-ui
