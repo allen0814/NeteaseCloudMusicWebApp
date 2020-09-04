@@ -13,7 +13,7 @@ const cdn = {
     vuex: 'Vuex',
     'vue-router': 'VueRouter',
     axios: 'axios',
-    'element-ui': 'ELEMENT'
+    'element-ui': 'ElementUI'
   },
   js: [
     'https://cdn.jsdelivr.net/npm/vue', // Vue
